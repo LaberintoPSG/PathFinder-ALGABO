@@ -1,5 +1,5 @@
-import { Maze } from "../shared/maze"
-import { Navbar } from "../shared/navbar"
+import { Maze } from "../_shared/componentes/maze/maze"
+import { Navbar } from "../_shared/componentes/navbar"
 
 export const LandingPage = () => {
     return (
@@ -13,7 +13,10 @@ export const LandingPage = () => {
                 alignItems: 'center',
                 height: '90vh'
             }}>
-                <Maze/>
+                <Maze
+                    length={20}
+                    width={50}
+                />
             </div>
         </div>
     )
