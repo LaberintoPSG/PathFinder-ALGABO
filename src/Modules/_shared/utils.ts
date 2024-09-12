@@ -13,3 +13,6 @@ export const generateRandomPairs = (width: number, length: number) => {
     return pairs
 
 }
+
+export const generateMatrixWxL = (width: number, length: number): number[][] =>
+    Array.from({ length }, (_, i) => Array.from({ length: width }, (_, j) => [i, j])).flat();

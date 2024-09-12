@@ -1,15 +1,14 @@
-import { useState } from "react"
+import { IWall } from "../../../../Interfaces/IWall"
 
 interface SquareProps {
-    isSelected?: boolean
+    wall?: IWall
 }
 
-export const Square: React.FC<SquareProps> = ({ isSelected }) => {
-
+export const Square: React.FC<SquareProps> = ({ wall }) => {
 
     return (
         <div style={{
-            border: '1px solid #999',
+            // border: '1px solid #999',
             float: 'left',
             fontSize: '24px',
             fontWeight: 'bold',
@@ -20,9 +19,13 @@ export const Square: React.FC<SquareProps> = ({ isSelected }) => {
             padding: '0',
             textAlign: 'center',
             width: '34px',
-            backgroundColor: isSelected ? 'aqua' : '#fff'
-        }}>
-
+            // backgroundColor: wall ? 'grey' : '#fff',
+            borderRight: wall?.wall_position === 'right' ? '1px solid red' : '1px solid black',
+            borderBottom:  wall?.wall_position === 'bottom' ? '1px solid red' : '1px solid black',
+            }}>
+            {/* <span>
+                .
+            </span> */}
         </div>
     )
 }
