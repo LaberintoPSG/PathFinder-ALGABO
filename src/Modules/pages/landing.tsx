@@ -14,8 +14,8 @@ export const LandingPage = () => {
                 height: '90vh'
             }}>
                 <Maze
-                    length={4}
-                    width={5}
+                    length={15}
+                    width={30}
                 />
             </div>
         </div>
