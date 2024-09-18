@@ -94,3 +94,5 @@
 // const graph = new Graph()
 // graph.listAdj = dummyGraph
 // console.log(BFS(graph, 's'))
+
+export {}
