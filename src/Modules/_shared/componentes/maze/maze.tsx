@@ -1,3 +1,4 @@
+import { Dijkstra } from "../../../../Algorithms/Dijkstra";
 import { DummyGraph2 } from "../../../../Graphs/DummyGraph";
 import { IWall } from "../../../../Interfaces/IWall";
 import { generateRandomWalls } from "../../utils";
@@ -9,6 +10,8 @@ interface MazeProps {
 }
 
 export const Maze: React.FC<MazeProps> = ({ width, length}) => {
+
+    console.log('hola');
 
     const Graph: {
         length: number;
