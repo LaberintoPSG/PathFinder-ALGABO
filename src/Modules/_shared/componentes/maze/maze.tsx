@@ -1,7 +1,6 @@
 import { Button } from "@mui/material";
 import { BFS, findPathFromBFS } from "../../../../Algorithms/BFS";
 import { Dijkstra } from "../../../../Algorithms/Dijkstra";
-import { DummyGraph2 } from "../../../../Graphs/DummyGraph";
 import { IWall } from "../../../../Interfaces/IWall";
 import { bfs, generateGraph, generateRandomWalls, transformToGraphWithAdjencyList } from "../../utils";
 import { Square } from "./square";
@@ -59,16 +58,25 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         setColoredSquares(new Set())
         const graph = generateGraph(Graph)
         console.log(graph)
-        const _bfs = bfs(graph, graph.getVertex()[0], graph.getVertex()[graph.getVertex().length- 1])
-        // const path = findPathFromBFS(bfs,"0-0", graph.getVertex()[graph.getVertex().length - 1])
-        // console.log(bfs)
+        // const _bfs = bfs(graph, graph.getVertex()[0], graph.getVertex()[graph.getVertex().length- 1])
+        const _bfs = bfs(graph, '0-5', '0-8')
         console.log(_bfs)
+        intervalColorPath(_bfs.map(e => {
+            const coords = e.split("-")
+            return [Number(coords[0]),Number(coords[1])]
+        }))
     }
 
     const executePlaceHolder = () => {
         setColoredSquares(new Set())
         const nodesToColor = [[1,0],[2,0],[3,0],[4,0],[5,0]]
         intervalColorPath(nodesToColor)
+    }
+
+    const executeDijkstra = () => {
+        setColoredSquares(new Set())
+        const _dijkstra = Dijkstra(Graph)
+        console.log(_dijkstra.path)
     }
 
     const executePathFinding = (algorithmToBeExecuted: AlgorithmType) => {
@@ -80,7 +88,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                 executeBFS()
             },
             Dijkstra: () => {
-                alert("404")
+                executeDijkstra()
             },
             PlaceHolder: () => {
                 executePlaceHolder()
@@ -108,17 +116,17 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                 <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    padding: '10%'
+                    padding: '5%'
                 }}>
-                    {/* <Button variant="contained"
-                    onClick={executeBFS}
+                    <Button variant="contained"
+                    onClick={() => {executePathFinding("Dijkstra")}}
                     >
-                        Execute Dijkstra
-                    </Button> */}
+                        Dijkstra
+                    </Button>
                     <Button variant="contained"
                     onClick={() => executePathFinding("BFS")}
                     >
-                        Execute BFS
+                        BFS
                     </Button>
                     <Button variant="contained"
                     onClick={() => executePathFinding("PlaceHolder")}

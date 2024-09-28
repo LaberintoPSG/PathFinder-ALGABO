@@ -5,8 +5,8 @@ import { generateRandomWalls } from "../_shared/utils";
 
 export const LandingPage = () => {
 
-    const length = 10
-    const width = 10
+    const length = 20
+    const width = 30
 
     const Graph: {
         length: number;
