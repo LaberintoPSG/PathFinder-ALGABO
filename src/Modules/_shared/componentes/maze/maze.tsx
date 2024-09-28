@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import { BFS, findPathFromBFS } from "../../../../Algorithms/BFS";
+import { Dijkstra } from "../../../../Algorithms/Dijkstra";
 import { DummyGraph2 } from "../../../../Graphs/DummyGraph";
 import { IWall } from "../../../../Interfaces/IWall";
 import { bfs, generateGraph, generateRandomWalls, transformToGraphWithAdjencyList } from "../../utils";
