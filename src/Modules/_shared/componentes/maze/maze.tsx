@@ -1,6 +1,8 @@
+import { Button } from "@mui/material";
+import { BFS } from "../../../../Algorithms/BFS";
 import { DummyGraph2 } from "../../../../Graphs/DummyGraph";
 import { IWall } from "../../../../Interfaces/IWall";
-import { generateRandomWalls } from "../../utils";
+import { generateRandomWalls, transformToGraphWithAdjencyList } from "../../utils";
 import { Square } from "./square";
 
 interface MazeProps {
@@ -20,6 +22,13 @@ export const Maze: React.FC<MazeProps> = ({ width, length}) => {
         walls: generateRandomWalls(length,width)
     }
 
+    const executeBFS = () => {
+        const graph = transformToGraphWithAdjencyList(Graph)
+        console.log(graph)
+        const bfs = BFS(graph,"0,0")
+        console.log(bfs)
+    }
+
     const squares = [];
     for (let row = 0; row < length; row++) {
         for (let col = 0; col < width; col++) {
@@ -30,18 +39,28 @@ export const Maze: React.FC<MazeProps> = ({ width, length}) => {
                     w.square_coord[1] === col
                 ))
             }
+            isStart = {row === col && row === 0}
+            isEnd = {row === length-1  && col === width-1}
             />);
         }
     }
 
     return (
-        <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: `repeat(${width}, 2rem)`,
-            border: '1px solid black',
-            // borderTop: '1px solid black'
-            }}>
-            {squares}
+        <div>
+            <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: `repeat(${width}, 2rem)`,
+                border: '1px solid black',
+                // borderTop: '1px solid black'
+                }}>
+                {squares}
+            </div>
+            <div>
+                <Button variant="contained"
+                onClick={executeBFS}
+                >Execute BFS</Button>
+            </div>
         </div>
+
     );
 }

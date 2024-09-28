@@ -1,23 +1,5 @@
+import { Graph } from "../../Algorithms/BFS";
 import { IWall } from "../../Interfaces/IWall";
-
-export const generateRandomPairs = (width: number, length: number) => {
-    
-    const amaount =  Math.floor(Math.random() * ((width*length/2) - width + 1) + width);
-
-    const pairs: number[][] = []
-    Array.from(Array(amaount).keys()).forEach(i => {
-        pairs.push([
-            Math.floor(Math.random() * (width - 1) + 0),
-            Math.floor(Math.random() * (length - 1) + 0)
-        ])
-    })
-
-    return pairs
-
-}
-
-export const generateMatrixWxL = (width: number, length: number): number[][] =>
-    Array.from({ length }, (_, i) => Array.from({ length: width }, (_, j) => [i, j])).flat();
 
 
 export const generateRandomWalls = (length: number, width: number) => {
@@ -49,5 +31,56 @@ export const generateRandomWalls = (length: number, width: number) => {
     );
 
     return uniqueWalls;
+
+}
+
+export const transformToGraphWithAdjencyList = (graph: {
+    length: number;
+    width: number;
+    walls: IWall[];
+}) => {
+
+    const adjGraph = new Graph();
+
+    // Generar los vértices
+    for (let i = 0; i < graph.length; i++) {
+        for (let j = 0; j < graph.width; j++) {
+            const vertex = `${i},${j}`;
+            adjGraph.listAdj[vertex] = []; // Inicializa la lista de adyacencia
+        }
+    }
+
+    // Agregar aristas basadas en las paredes
+    const wallSet = new Set<string>();
+    for (const wall of graph.walls) {
+        const [x, y] = wall.square_coord;
+        const wallKey = `${x},${y},${wall.wall_position}`;
+        wallSet.add(wallKey); // Almacena la posición de la pared
+    }
+
+    // Conectar los vértices basados en la existencia de paredes
+    for (let i = 0; i < graph.length; i++) {
+        for (let j = 0; j < graph.width; j++) {
+            const currentVertex = `${i},${j}`;
+
+            // Comprobar si hay una pared a la derecha
+            if (!wallSet.has(`${i},${j},right`)) {
+                const rightVertex = `${i},${j + 1}`;
+                if (adjGraph.listAdj[rightVertex]) {
+                    adjGraph.listAdj[currentVertex].push(rightVertex);
+                }
+            }
+
+            // Comprobar si hay una pared abajo
+            if (!wallSet.has(`${i},${j},bottom`)) {
+                const bottomVertex = `${i + 1},${j}`;
+                if (adjGraph.listAdj[bottomVertex]) {
+                    adjGraph.listAdj[currentVertex].push(bottomVertex);
+                }
+            }
+        }
+    }
+
+    return adjGraph;
 
 }

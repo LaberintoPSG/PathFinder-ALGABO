@@ -1,98 +1,91 @@
-// // TODO:: CAMBIAR
+export class Graph {
+    listAdj: { [key: string]: string[] };
 
+    constructor() {
+        this.listAdj = {};
+    }
 
-// class Graph {
-//     constructor () {
-//         this.listAdj = {
+    getVertex(): string[] {
+        return Object.keys(this.listAdj);
+    }
+}
 
-//         }
-//     }
+class Queue {
+    Queue: string[];
 
-//     getVertex() {
-//         return Object.keys(this.listAdj)
-//     }
-// }
+    constructor() {
+        this.Queue = [];
+    }
 
-// class Queue {
+    insert(v: string): void {
+        this.Queue.push(v);
+    }
 
-//     constructor () {
-//         this.Queue = []
-//     }
+    remove(): string | undefined {
+        return this.Queue.shift();
+    }
 
-//     insert(v) {
-//         this.Queue.push(v)
-//     }
+    isEmpty(): boolean {
+        return this.Queue.length === 0;
+    }
+}
 
-//     remove() {
-//         return this.Queue.shift()
-//     }
+interface BFSResult {
+    pi: { [key: string]: string | null };
+    d: { [key: string]: number };
+}
 
-//     isEmpty() {
-//         return this.Queue.length === 0
-//     }
+export const BFS = (G: Graph, s: string): BFSResult => {
+    const colors: { [key: string]: string } = {};
+    const d: { [key: string]: number } = {};
+    const pi: { [key: string]: string | null } = {};
 
-// }
+    const VertexWithoutOrigin = G.getVertex().filter(v => v !== s);
 
+    for (const u of VertexWithoutOrigin) {
+        colors[u] = "White";
+        d[u] = Number.POSITIVE_INFINITY;
+        pi[u] = null;
+    }
 
+    colors[s] = "Grey";
+    d[s] = 0;
+    pi[s] = null;
 
-// const BFS = (G,s) => {
+    const Q = new Queue();
+    Q.insert(s);
 
-//     const colors = {}
-//     const d = {}
-//     const pi = {}
+    while (!Q.isEmpty()) {
+        const u = Q.remove()!; // Non-null assertion since Q is not empty
 
-//     const VertexWithoutOrigin = G.getVertex().filter(v => (
-//         v !== s
-//     ))
+        for (const v of G.listAdj[u]) {
+            if (colors[v] === "White") {
+                colors[v] = "Grey";
+                d[v] = d[u] + 1;
+                pi[v] = u;
+                Q.insert(v);
+            }
+        }
+        colors[u] = "Black";
+    }
 
-//     for (const u of VertexWithoutOrigin) {
-//         colors[u] = "White"
-//         d[u] = Number.POSITIVE_INFINITY
-//         pi[u] = null
-//     }
+    return {
+        pi,
+        d
+    };
+};
 
-//     colors[s] = "Grey"
-//     d[s] = 0
-//     pi[s] = null
+const dummyGraph: { [key: string]: string[] } = {
+    'r': ['s', 'v'],
+    's': ['r', 'w'],
+    'v': [],
+    'w': ['s', 't', 'x'],
+    't': ['w', 'x'],
+    'x': ['w', 'u', 'y'],
+    'u': ['x', 'y'],
+    'y': ['x', 'u']
+};
 
-//     const Q = new Queue()
-//     Q.insert(s)
-
-//     while (!Q.isEmpty) {
-
-//         u = Q.remove()
-
-//         for (const v of G[u]) {
-            
-//             if (colors[v] === "White") {
-//                 colors[v] = "Gris"
-//                 d[v] = d[v] + 1
-//                 pi[v] = u
-//                 Q.insert(v)
-//             }
-//         }
-//         colors[u] === "Black"
-//     }
-
-//     return {
-//         pi,
-//         d
-//     }
-// }
-
-// const dummyGraph = {
-//     'r': ['s','v'],
-//     's': ['r','w'],
-//     'v': [],
-//     'w': ['s','t','x'],
-//     't': ['w','x'],
-//     'x': ['w','u','y'],
-//     'u': ['x','y'],
-//     'y': ['x','u']
-// }
-
-// const graph = new Graph()
-// graph.listAdj = dummyGraph
-// console.log(BFS(graph, 's'))
-
-export {}
+const graph = new Graph();
+graph.listAdj = dummyGraph;
+console.log(BFS(graph, 's'));
