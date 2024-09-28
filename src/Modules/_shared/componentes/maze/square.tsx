@@ -6,9 +6,10 @@ interface SquareProps {
     wall?: IWall,
     isStart?: boolean,
     isEnd?: boolean,
+    extraStyles?: {}
 }
 
-export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd }) => {
+export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd, extraStyles }) => {
 
     return (
         <div style={{
@@ -26,6 +27,7 @@ export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd }) => {
             // backgroundColor: wall ? 'grey' : '#fff',
             borderRight: wall?.wall_position === 'right' ? '1px solid black' : 'none',
             borderBottom:  wall?.wall_position === 'bottom' ? '1px solid black' : 'none',
+            ...extraStyles
             }}>
                 {
                     isStart && (

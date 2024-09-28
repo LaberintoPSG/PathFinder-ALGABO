@@ -5,6 +5,17 @@ export class Graph {
         this.listAdj = {};
     }
 
+    addEdge(vertex1:any, vertex2:any) {
+        if (!this.listAdj[vertex1]) {
+            this.listAdj[vertex1] = [];
+        }
+        if (!this.listAdj[vertex2]) {
+            this.listAdj[vertex2] = [];
+        }
+        this.listAdj[vertex1].push(vertex2);
+        this.listAdj[vertex2].push(vertex1);
+    }
+
     getVertex(): string[] {
         return Object.keys(this.listAdj);
     }
@@ -56,7 +67,7 @@ export const BFS = (G: Graph, s: string): BFSResult => {
     Q.insert(s);
 
     while (!Q.isEmpty()) {
-        const u = Q.remove()!; // Non-null assertion since Q is not empty
+        const u = Q.remove()!;
 
         for (const v of G.listAdj[u]) {
             if (colors[v] === "White") {
@@ -75,6 +86,22 @@ export const BFS = (G: Graph, s: string): BFSResult => {
     };
 };
 
+export const findPathFromBFS = (BFSResult: BFSResult, s: string, target: string): string[] => {
+    const path: string[] = [];
+    let current: string | null = target;
+
+    while (current !== null) {
+        path.unshift(current); 
+        current = BFSResult.pi[current];
+    }
+
+    if (path[0] === s) {
+        return path;
+    }
+
+    return [];
+};
+
 const dummyGraph: { [key: string]: string[] } = {
     'r': ['s', 'v'],
     's': ['r', 'w'],
@@ -89,3 +116,8 @@ const dummyGraph: { [key: string]: string[] } = {
 const graph = new Graph();
 graph.listAdj = dummyGraph;
 console.log(BFS(graph, 's'));
+
+const result = BFS(graph, 's'); 
+const lastVertex = graph.getVertex()[graph.getVertex().length - 1];
+const path = findPathFromBFS(result, 's', lastVertex);
+console.log(path);
