@@ -56,9 +56,21 @@ export const Maze: React.FC<MazeProps> = ({ width, length}) => {
                 {squares}
             </div>
             <div>
-                <Button variant="contained"
-                onClick={executeBFS}
-                >Execute BFS</Button>
+                <div style={{
+                    display: 'flex'
+                }}>
+                    <Button variant="contained"
+                    onClick={executeBFS}
+                    >
+                        Execute BFS
+                    </Button>
+                    <Button variant="contained"
+                    onClick={executeBFS}
+                    >
+                        Execute
+                    </Button>
+                </div>
+
             </div>
         </div>
 
