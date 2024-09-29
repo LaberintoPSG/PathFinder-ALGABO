@@ -6,10 +6,11 @@ interface SquareProps {
     wall?: IWall,
     isStart?: boolean,
     isEnd?: boolean,
-    extraStyles?: {}
+    extraStyles?: {},
+    coord?: string
 }
 
-export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd, extraStyles }) => {
+export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd, extraStyles, coord }) => {
 
     return (
         <div style={{
@@ -38,6 +39,11 @@ export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd, extraStyle
                     isEnd && (
                         <LogoutIcon/>
                     )
+                }
+                {
+                    <span style={{
+                        fontSize: '7px'
+                    }}>{coord}</span>
                 }
         </div>
     )

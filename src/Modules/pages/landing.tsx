@@ -1,3 +1,4 @@
+import { DummyGraph3 } from "../../Graphs/DummyGraph";
 import { IWall } from "../../Interfaces/IWall";
 import { Maze } from "../_shared/componentes/maze/maze"
 import { Navbar } from "../_shared/componentes/navbar"
@@ -5,8 +6,8 @@ import { generateRandomWalls } from "../_shared/utils";
 
 export const LandingPage = () => {
 
-    const length = 20
-    const width = 30
+    const length = 5
+    const width = 5
 
     const Graph: {
         length: number;
@@ -30,7 +31,7 @@ export const LandingPage = () => {
                 height: '90vh'
             }}>
                 <Maze
-                    Graph={Graph}
+                    Graph={DummyGraph3}
                 />
             </div>
         </div>

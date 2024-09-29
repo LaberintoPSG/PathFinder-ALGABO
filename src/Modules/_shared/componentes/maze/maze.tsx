@@ -2,10 +2,11 @@ import { Button } from "@mui/material";
 import { BFS, findPathFromBFS } from "../../../../Algorithms/BFS";
 import { Dijkstra } from "../../../../Algorithms/Dijkstra";
 import { IWall } from "../../../../Interfaces/IWall";
-import { bfs, generateGraph, generateRandomWalls, transformToGraphWithAdjencyList } from "../../utils";
+import { ConverterGraphWallNotationToAdjList } from "../../utils";
 import { Square } from "./square";
 import { ReactNode, useEffect, useState } from "react";
 import { AlgorithmType } from "../../../../Constants/Types";
+import { DummyGraph3 } from "../../../../Graphs/DummyGraph";
 
 interface MazeProps {
     Graph: {
@@ -16,7 +17,6 @@ interface MazeProps {
 }
 
 export const Maze: React.FC<MazeProps> = ({ Graph }) => {
-
     const [squares,setSquares] = useState<ReactNode[]>([])
     const [coloredSquares, setColoredSquares] = useState<Set<string>>(new Set());
     const {length, width} = Graph
@@ -39,6 +39,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                 isStart = {row === col && row === 0}
                 isEnd = {row === length-1  && col === width-1}
                 extraStyles={style} 
+                coord={(row === col && row === 0) || (row === length-1  && col === width-1) ? undefined : `${row}-${col}`}
                 />);
             }
         }
@@ -55,15 +56,16 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     }
 
     const executeBFS = () => {
-        setColoredSquares(new Set())
-        const graph = generateGraph(Graph)
+        const graph = ConverterGraphWallNotationToAdjList(Graph)
         console.log(graph)
-        // const _bfs = bfs(graph, graph.getVertex()[0], graph.getVertex()[graph.getVertex().length- 1])
-        const _bfs = bfs(graph, '0-5', '0-8')
+        const _bfs = BFS(graph,'0-0')
         console.log(_bfs)
-        intervalColorPath(_bfs.map(e => {
-            const coords = e.split("-")
-            return [Number(coords[0]),Number(coords[1])]
+        const path = findPathFromBFS(_bfs,'0-0','4-4')
+        console.log(path)
+        intervalColorPath(path.map(p => {
+            const coordList = p.split("-")
+
+            return coordList.map(Number)
         }))
     }
 
@@ -134,7 +136,6 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                         Execute
                     </Button>
                 </div>
-
             </div>
         </div>
 
