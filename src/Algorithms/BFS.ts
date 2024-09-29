@@ -1,98 +1,133 @@
-// // TODO:: CAMBIAR
+export class Graph {
+    listAdj: { [key: string]: string[] };
 
+    constructor() {
+        this.listAdj = {};
+    }
 
-// class Graph {
-//     constructor () {
-//         this.listAdj = {
+    addEdge(vertex1:any, vertex2:any) {
+        if (!this.listAdj[vertex1]) {
+            this.listAdj[vertex1] = [];
+        }
+        if (!this.listAdj[vertex2]) {
+            this.listAdj[vertex2] = [];
+        }
+        this.listAdj[vertex1].push(vertex2);
+        this.listAdj[vertex2].push(vertex1);
+    }
 
-//         }
-//     }
+    getVertex(): string[] {
+        return Object.keys(this.listAdj);
+    }
+}
 
-//     getVertex() {
-//         return Object.keys(this.listAdj)
-//     }
-// }
+class Queue {
+    Queue: string[];
 
-// class Queue {
+    constructor() {
+        this.Queue = [];
+    }
 
-//     constructor () {
-//         this.Queue = []
-//     }
+    insert(v: string): void {
+        this.Queue.push(v);
+    }
 
-//     insert(v) {
-//         this.Queue.push(v)
-//     }
+    remove(): string | undefined {
+        return this.Queue.shift();
+    }
 
-//     remove() {
-//         return this.Queue.shift()
-//     }
+    isEmpty(): boolean {
+        return this.Queue.length === 0;
+    }
+}
 
-//     isEmpty() {
-//         return this.Queue.length === 0
-//     }
+interface BFSResult {
+    pi: { [key: string]: string | null };
+    d: { [key: string]: number };
+}
 
-// }
+export const BFS = (G: Graph, s: string): BFSResult => {
+    const colors: { [key: string]: string } = {};
+    const d: { [key: string]: number } = {};
+    const pi: { [key: string]: string | null } = {};
 
+    const VertexWithoutOrigin = G.getVertex().filter(v => v !== s);
 
+    for (const u of VertexWithoutOrigin) {
+        colors[u] = "White";
+        d[u] = Number.POSITIVE_INFINITY;
+        pi[u] = null;
+    }
 
-// const BFS = (G,s) => {
+    colors[s] = "Grey";
+    d[s] = 0;
+    pi[s] = null;
 
-//     const colors = {}
-//     const d = {}
-//     const pi = {}
+    const Q = new Queue();
+    Q.insert(s);
 
-//     const VertexWithoutOrigin = G.getVertex().filter(v => (
-//         v !== s
-//     ))
+    while (!Q.isEmpty()) {
+        const u = Q.remove()!;
 
-//     for (const u of VertexWithoutOrigin) {
-//         colors[u] = "White"
-//         d[u] = Number.POSITIVE_INFINITY
-//         pi[u] = null
-//     }
+        for (const v of G.listAdj[u]) {
+            if (colors[v] === "White") {
+                colors[v] = "Grey";
+                d[v] = d[u] + 1;
+                pi[v] = u;
+                Q.insert(v);
+            }
+        }
+        colors[u] = "Black";
+    }
 
-//     colors[s] = "Grey"
-//     d[s] = 0
-//     pi[s] = null
+    return {
+        pi,
+        d
+    };
+};
 
-//     const Q = new Queue()
-//     Q.insert(s)
+export const findPathFromBFS = (BFSResult: BFSResult, s: string, target: string): string[] => {
+    const path: string[] = [];
+    let current: string | null = target;
 
-//     while (!Q.isEmpty) {
+    while (current !== null) {
+        path.unshift(current); 
+        current = BFSResult.pi[current];
+    }
 
-//         u = Q.remove()
+    if (path[0] === s) {
+        return path;
+    }
 
-//         for (const v of G[u]) {
-            
-//             if (colors[v] === "White") {
-//                 colors[v] = "Gris"
-//                 d[v] = d[v] + 1
-//                 pi[v] = u
-//                 Q.insert(v)
-//             }
-//         }
-//         colors[u] === "Black"
-//     }
+    return [];
+};
 
-//     return {
-//         pi,
-//         d
-//     }
-// }
+export const visitedNodesBFS = (BFSResult: BFSResult) => {
+    return Object.entries(BFSResult.d).reduce((acc, [vertex, distance]) => {
+        if (!acc[distance]) {
+            acc[distance] = [];
+        }
+        acc[distance].push(vertex);
+        return acc;
+    }, {} as { [key: number]: string[] });
+}
 
-// const dummyGraph = {
-//     'r': ['s','v'],
-//     's': ['r','w'],
-//     'v': [],
-//     'w': ['s','t','x'],
-//     't': ['w','x'],
-//     'x': ['w','u','y'],
-//     'u': ['x','y'],
-//     'y': ['x','u']
-// }
+const dummyGraph: { [key: string]: string[] } = {
+    'r': ['s', 'v'],
+    's': ['r', 'w'],
+    'v': [],
+    'w': ['s', 't', 'x'],
+    't': ['w', 'x'],
+    'x': ['w', 'u', 'y'],
+    'u': ['x', 'y'],
+    'y': ['x', 'u']
+};
 
-// const graph = new Graph()
-// graph.listAdj = dummyGraph
-// console.log(BFS(graph, 's'))
+const graph = new Graph();
+graph.listAdj = dummyGraph;
+console.log(BFS(graph, 's'));
 
-export {}
+const result = BFS(graph, 's'); 
+const lastVertex = graph.getVertex()[graph.getVertex().length - 1];
+const path = findPathFromBFS(result, 's', lastVertex);
+console.log(path);
