@@ -102,6 +102,16 @@ export const findPathFromBFS = (BFSResult: BFSResult, s: string, target: string)
     return [];
 };
 
+export const visitedNodesBFS = (BFSResult: BFSResult) => {
+    return Object.entries(BFSResult.d).reduce((acc, [vertex, distance]) => {
+        if (!acc[distance]) {
+            acc[distance] = [];
+        }
+        acc[distance].push(vertex);
+        return acc;
+    }, {} as { [key: number]: string[] });
+}
+
 const dummyGraph: { [key: string]: string[] } = {
     'r': ['s', 'v'],
     's': ['r', 'w'],

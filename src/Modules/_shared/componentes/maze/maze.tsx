@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { BFS, findPathFromBFS } from "../../../../Algorithms/BFS";
+import { BFS, findPathFromBFS, visitedNodesBFS } from "../../../../Algorithms/BFS";
 import { Dijkstra } from "../../../../Algorithms/Dijkstra";
 import { IWall } from "../../../../Interfaces/IWall";
 import { ConverterGraphWallNotationToAdjList } from "../../utils";
@@ -19,6 +19,7 @@ interface MazeProps {
 export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     const [squares,setSquares] = useState<ReactNode[]>([])
     const [coloredSquares, setColoredSquares] = useState<Set<string>>(new Set());
+    const [visitedSquares, setVisitedSquares] = useState<Set<string>>(new Set());
     const {length, width} = Graph
 
     const initializeMaze = () => {
@@ -27,8 +28,14 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             for (let col = 0; col < width; col++) {
                 const key = `${row}-${col}`;
                 const isColored = coloredSquares.has(key);
-                const style = isColored ? { backgroundColor: 'aqua' } : {};
-
+                const isVisited = visitedSquares.has(key);
+                let style = {}
+                if (isVisited) {
+                    style = { backgroundColor: 'tomato' };
+                }
+                if (isColored) {
+                    style = { backgroundColor: 'aqua' };
+                }
                 sq.push(<Square key={`${row}-${col}`} 
                 wall={
                     Graph.walls.find(w => (
@@ -46,6 +53,20 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         setSquares(sq)
     }
 
+    const intervalVisitedNodes = (visitedNodes: number[][]): Promise<void> => {
+        return new Promise((resolve) => {
+            visitedNodes.forEach((node, index) => {
+                setTimeout(() => {
+                    const key = `${node[0]}-${node[1]}`;
+                    setVisitedSquares((prev) => new Set(prev).add(key));
+                    if (index === visitedNodes.length - 1) {
+                        resolve();
+                    }
+                }, index * 250);
+            });
+        });
+    }
+    
     const intervalColorPath = (nodesToColor: number[][]) => {
         nodesToColor.forEach((node, index) => {
             setTimeout(() => {
@@ -55,30 +76,33 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         });
     }
 
-    const executeBFS = () => {
+    const executeBFS = async () => {
+        setColoredSquares(new Set())
+        setVisitedSquares(new Set())
         const graph = ConverterGraphWallNotationToAdjList(Graph)
-        console.log(graph)
         const _bfs = BFS(graph,'0-0')
-        console.log(_bfs)
         const path = findPathFromBFS(_bfs,'0-0','4-4')
-        console.log(path)
+        const visitedNodes = visitedNodesBFS(_bfs)
+
+        await intervalVisitedNodes(
+            Object.entries(visitedNodes)
+            .filter(([key]) => key !== 'Infinity')
+            .map(([, v]) => v.map(v => [Number(v.split('-')[0]),Number(v.split('-')[1])]))
+            .flat()
+        )
+
         intervalColorPath(path.map(p => {
             const coordList = p.split("-")
-
             return coordList.map(Number)
         }))
     }
 
-    const executePlaceHolder = () => {
+    const executeDijkstra = async () => {
         setColoredSquares(new Set())
-        const nodesToColor = [[1,0],[2,0],[3,0],[4,0],[5,0]]
-        intervalColorPath(nodesToColor)
-    }
-
-    const executeDijkstra = () => {
-        setColoredSquares(new Set())
+        setVisitedSquares(new Set())
         const _dijkstra = Dijkstra(Graph)
-        console.log(_dijkstra.path)
+        await intervalVisitedNodes(_dijkstra.visitedNodes)
+        intervalColorPath(_dijkstra.path)
     }
 
     const executePathFinding = (algorithmToBeExecuted: AlgorithmType) => {
@@ -91,9 +115,6 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             },
             Dijkstra: () => {
                 executeDijkstra()
-            },
-            PlaceHolder: () => {
-                executePlaceHolder()
             }
         };
 
@@ -102,7 +123,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
 
     useEffect(() => {
         initializeMaze()
-    }, [coloredSquares])
+    }, [coloredSquares,visitedSquares])
 
     return (
         <div>
@@ -129,11 +150,6 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                     onClick={() => executePathFinding("BFS")}
                     >
                         BFS
-                    </Button>
-                    <Button variant="contained"
-                    onClick={() => executePathFinding("PlaceHolder")}
-                    >
-                        Execute
                     </Button>
                 </div>
             </div>

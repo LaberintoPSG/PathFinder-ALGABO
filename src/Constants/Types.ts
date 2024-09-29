@@ -1,1 +1,1 @@
-export type AlgorithmType = 'BFS' | 'Dijkstra' | 'PlaceHolder'
+export type AlgorithmType = 'BFS' | 'Dijkstra'

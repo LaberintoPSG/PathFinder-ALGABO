@@ -26,8 +26,8 @@ export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd, extraStyle
             textAlign: 'center',
             width: '34px',
             // backgroundColor: wall ? 'grey' : '#fff',
-            borderRight: wall?.wall_position === 'right' ? '1px solid black' : 'none',
-            borderBottom:  wall?.wall_position === 'bottom' ? '1px solid black' : 'none',
+            borderRight: wall?.wall_position === 'right' ? '2px solid black' : 'none',
+            borderBottom:  wall?.wall_position === 'bottom' ? '2px solid black' : 'none',
             ...extraStyles
             }}>
                 {
