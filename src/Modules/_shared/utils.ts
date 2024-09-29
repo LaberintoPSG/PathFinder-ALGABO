@@ -88,7 +88,7 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
 
         }
         else if (wc.wall_positions[0] !== 'right') { // has a right neighbour
-            if(wc.square_coord[1] < length-1) {
+            if(wc.square_coord[1] < width-1) {
 
                 graph.listAdj[wc.str_coord].push(
                     `${wc.square_coord[0]}-${wc.square_coord[1]+1}`
@@ -101,8 +101,9 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
         }
         else if ((wc.wall_positions[0] === 'right')){ // has a bottom neighbour
             console.log("rojo",wc.str_coord)
-            if(wc.square_coord[0] < width-1) {
-                console.log("rojo2")
+            if(wc.square_coord[0] < length-1) {
+                console.log("rojo2", `${wc.square_coord[0]+1}-${wc.square_coord[1]}`)
+                
                 graph.listAdj[wc.str_coord].push(
                     `${wc.square_coord[0]+1}-${wc.square_coord[1]}`
                 )
@@ -124,7 +125,7 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
     twoNeighbourCoords.forEach(coord => {
         const coordNumber = coord.split("-").map(Number)
 
-        if(coordNumber[1] < length-1) {
+        if(coordNumber[1] < width-1) {
 
             graph.listAdj[coord].push(
                 `${coordNumber[0]}-${coordNumber[1]+1}`
@@ -134,7 +135,7 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
             ) // since the edge  has no direction
         }
 
-        if(coordNumber[0] < width-1) {
+        if(coordNumber[0] < length-1) {
             graph.listAdj[coord].push(
                 `${coordNumber[0]+1}-${coordNumber[1]}`
             )

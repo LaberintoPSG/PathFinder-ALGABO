@@ -6,7 +6,7 @@ import { ConverterGraphWallNotationToAdjList } from "../../utils";
 import { Square } from "./square";
 import { ReactNode, useEffect, useState } from "react";
 import { AlgorithmType } from "../../../../Constants/Types";
-import { DummyGraph3 } from "../../../../Graphs/DummyGraph";
+import { DummyGraphTS } from "../../../../Graphs/DummyGraph";
 
 interface MazeProps {
     Graph: {
@@ -62,7 +62,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                     if (index === visitedNodes.length - 1) {
                         resolve();
                     }
-                }, index * 250);
+                }, index * 50); // original set to 250
             });
         });
     }
@@ -72,7 +72,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             setTimeout(() => {
                 const key = `${node[0]}-${node[1]}`;
                 setColoredSquares((prev) => new Set(prev).add(key));
-            }, index * 500);
+            }, index * 100); // original set to 500 
         });
     }
 
@@ -81,7 +81,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         setVisitedSquares(new Set())
         const graph = ConverterGraphWallNotationToAdjList(Graph)
         const _bfs = BFS(graph,'0-0')
-        const path = findPathFromBFS(_bfs,'0-0','4-4')
+        const path = findPathFromBFS(_bfs,'0-0','14-29') //TODO:: REFACTOR
         const visitedNodes = visitedNodesBFS(_bfs)
 
         await intervalVisitedNodes(
