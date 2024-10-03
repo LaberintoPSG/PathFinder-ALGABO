@@ -5,17 +5,6 @@ export class Graph {
         this.listAdj = {};
     }
 
-    addEdge(vertex1:any, vertex2:any) {
-        if (!this.listAdj[vertex1]) {
-            this.listAdj[vertex1] = [];
-        }
-        if (!this.listAdj[vertex2]) {
-            this.listAdj[vertex2] = [];
-        }
-        this.listAdj[vertex1].push(vertex2);
-        this.listAdj[vertex2].push(vertex1);
-    }
-
     getVertex(): string[] {
         return Object.keys(this.listAdj);
     }

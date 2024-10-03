@@ -284,13 +284,6 @@
        },
        {
           "square_coord":[
-             13,
-             2
-          ],
-          "wall_position":"right"
-       },
-       {
-          "square_coord":[
              11,
              17
           ],

@@ -7,6 +7,7 @@ import { Square } from "./square";
 import { ReactNode, useEffect, useState } from "react";
 import { AlgorithmType } from "../../../../Constants/Types";
 import { DummyGraphTS } from "../../../../Graphs/DummyGraph";
+import { DFS } from "../../../../Algorithms/DFS";
 
 interface MazeProps {
     Graph: {
@@ -105,6 +106,26 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         intervalColorPath(_dijkstra.path)
     }
 
+    const executeDFS = async () => {
+        setColoredSquares(new Set())
+        setVisitedSquares(new Set())
+        const graph = ConverterGraphWallNotationToAdjList(Graph)
+        const _bfs = DFS(graph,'0-0')
+        const path = findPathFromBFS(_bfs,'0-0','14-29') //TODO:: REFACTOR
+        const visitedNodes = visitedNodesBFS(_bfs)
+
+        await intervalVisitedNodes(
+            Object.entries(visitedNodes)
+            .filter(([key]) => key !== 'Infinity')
+            .map(([, v]) => v.map(v => [Number(v.split('-')[0]),Number(v.split('-')[1])]))
+            .flat()
+        )
+
+        intervalColorPath(path.map(p => {
+            const coordList = p.split("-")
+            return coordList.map(Number)
+        }))
+    }
     const executePathFinding = (algorithmToBeExecuted: AlgorithmType) => {
 
         const algorithms: {
@@ -115,7 +136,16 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             },
             Dijkstra: () => {
                 executeDijkstra()
-            }
+            },
+            astar: () => {
+
+            },
+            DFS: () => {
+                executeDFS()
+            },
+            GFS: () => {
+                
+            },
         };
 
         algorithms[algorithmToBeExecuted]();
@@ -130,7 +160,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             <div style={{ 
                 display: 'grid', 
                 gridTemplateColumns: `repeat(${width}, 2rem)`,
-                border: '2px solid black',
+                border: '5px solid black',
                 // borderTop: '1px solid black'
                 }}>
                 {squares}
@@ -150,6 +180,11 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                     onClick={() => executePathFinding("BFS")}
                     >
                         BFS
+                    </Button>
+                    <Button variant="contained"
+                    onClick={() => executePathFinding("DFS")}
+                    >
+                        DFS
                     </Button>
                 </div>
             </div>
