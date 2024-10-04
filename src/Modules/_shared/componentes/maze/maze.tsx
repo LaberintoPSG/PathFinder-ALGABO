@@ -181,11 +181,11 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                     >
                         BFS
                     </Button>
-                    <Button variant="contained"
+                    {/* <Button variant="contained"
                     onClick={() => executePathFinding("DFS")}
                     >
                         DFS
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
         </div>
