@@ -8,6 +8,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { AlgorithmType } from "../../../../Constants/Types";
 import { DummyGraphTS } from "../../../../Graphs/DummyGraph";
 import { DFS } from "../../../../Algorithms/DFS";
+import { Astar, WeightedGraph } from "../../../../Algorithms/Astar";
 
 interface MazeProps {
     Graph: {
@@ -126,6 +127,41 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             return coordList.map(Number)
         }))
     }
+
+    const executeAstar = () => {
+        const graph = new WeightedGraph();
+
+        graph.listAdj = {
+            'A': [{ vertex: 'B', weight: 1 }, { vertex: 'C', weight: 3 }],
+            'B': [{ vertex: 'A', weight: 1 }, { vertex: 'C', weight: 3 }, { vertex: 'D', weight: 4 }],
+            'C': [{ vertex: 'A', weight: 3 }, { vertex: 'B', weight: 3 }, { vertex: 'E', weight: 1 }],
+            'D': [{ vertex: 'B', weight: 4 }, { vertex: 'G', weight: 5 }],
+            'E': [{ vertex: 'C', weight: 1 }, { vertex: 'G', weight: 2 }],
+            'G': [{ vertex: 'D', weight: 5 }, { vertex: 'E', weight: 2 }]
+        };
+        
+        console.log(
+            "A*, END",
+            Astar(graph,'A','G', (v:string) => 0, true)
+        )
+
+        console.log("///////////////////////////////////////////////////")
+        console.log(
+            "A*, END",
+            Astar(graph,'A','G', (v:string) => (
+                v === 'D' ? 4 : 0
+            ), true)
+        )
+
+        console.log("///////////////////////////////////////////////////")
+        console.log(
+            "A*, END",
+            Astar(graph,'A','G', (v:string) => (
+                v === 'C' ? 100 : 0
+            ), true)
+        )
+    }
+
     const executePathFinding = (algorithmToBeExecuted: AlgorithmType) => {
 
         const algorithms: {
@@ -138,7 +174,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                 executeDijkstra()
             },
             astar: () => {
-
+                executeAstar()
             },
             DFS: () => {
                 executeDFS()
@@ -185,6 +221,11 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                     onClick={() => executePathFinding("DFS")}
                     >
                         DFS
+                    </Button>
+                    <Button variant="contained"
+                    onClick={() => executePathFinding("astar")}
+                    >
+                        A*
                     </Button>
                 </div>
             </div>
