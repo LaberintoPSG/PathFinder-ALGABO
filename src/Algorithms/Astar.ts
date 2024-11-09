@@ -82,6 +82,40 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
 
 }
 
+export const findPathFromAstar = (prev: { [vertex: string]: string | undefined }, start: string, target: string): string[] => {
+    const path: string[] = [];
+    let current: string | undefined = target;
+
+    while (current !== undefined) {
+        path.unshift(current);
+        current = prev[current];
+    }
+
+    if (path[0] === start) {
+        return path;
+    }
+
+    return [];
+};
+
+export const visitedNodesAstar = (X: Set<string>, fi: { [vertex: string]: number }): { [distance: number]: string[] } => {
+    const result: { [distance: number]: string[] } = {};
+
+    X.forEach(vertex => {
+        const distance = fi[vertex];
+        if (distance !== Infinity) { 
+            if (!result[distance]) {
+                result[distance] = [];
+            }
+            result[distance].push(vertex);
+        }
+    })
+    
+    return result;
+};
+
+
+
 const graph = new WeightedGraph();
 
 graph.listAdj = {

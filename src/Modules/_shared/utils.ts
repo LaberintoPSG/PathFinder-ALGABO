@@ -1,3 +1,4 @@
+import { WeightedGraph } from "../../Algorithms/Astar";
 import { Graph } from "../../Algorithms/BFS";
 import { IWall } from "../../Interfaces/IWall";
 
@@ -147,4 +148,20 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
 
     return graph
 
+}
+
+export const  convertGraphToWeightedGraph = (graph: Graph): WeightedGraph => {
+    const weightedGraph = new WeightedGraph();
+
+    for (const vertex in graph.listAdj) {
+        if (!graph.listAdj.hasOwnProperty(vertex)) continue;
+
+        weightedGraph.listAdj[vertex] = [];
+
+        for (const neighbor of graph.listAdj[vertex]) {
+            weightedGraph.listAdj[vertex].push({ vertex: neighbor, weight: 1 });
+        }
+    }
+
+    return weightedGraph;
 }

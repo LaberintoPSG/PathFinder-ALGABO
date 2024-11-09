@@ -1,14 +1,15 @@
-import { Button } from "@mui/material";
+import { Button, MenuItem, Select } from "@mui/material";
 import { BFS, findPathFromBFS, visitedNodesBFS } from "../../../../Algorithms/BFS";
 import { Dijkstra } from "../../../../Algorithms/Dijkstra";
 import { IWall } from "../../../../Interfaces/IWall";
-import { ConverterGraphWallNotationToAdjList } from "../../utils";
+import { ConverterGraphWallNotationToAdjList, convertGraphToWeightedGraph } from "../../utils";
 import { Square } from "./square";
 import { ReactNode, useEffect, useState } from "react";
 import { AlgorithmType } from "../../../../Constants/Types";
 import { DummyGraphTS } from "../../../../Graphs/DummyGraph";
 import { DFS } from "../../../../Algorithms/DFS";
-import { Astar, WeightedGraph } from "../../../../Algorithms/Astar";
+import { Astar, findPathFromAstar, visitedNodesAstar, WeightedGraph } from "../../../../Algorithms/Astar";
+import { HeuristicsCollection } from "../../../../Algorithms/Heuristics";
 
 interface MazeProps {
     Graph: {
@@ -23,6 +24,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     const [coloredSquares, setColoredSquares] = useState<Set<string>>(new Set());
     const [visitedSquares, setVisitedSquares] = useState<Set<string>>(new Set());
     const {length, width} = Graph
+    const [selectedHeuristicForAstar, setSelectedHeuristicForAstar] = useState<number>()
 
     const initializeMaze = () => {
         const sq = [];
@@ -128,38 +130,41 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         }))
     }
 
-    const executeAstar = () => {
-        const graph = new WeightedGraph();
+    const executeAstar = async () => {
+        const graph = convertGraphToWeightedGraph(ConverterGraphWallNotationToAdjList(Graph))
+        setColoredSquares(new Set())
+        setVisitedSquares(new Set())
+        // let heuristic = HeuristicsCollection.noHeuristic
+        // switch (selectedHeuristicForAstar) {
+        //     case 2:
+        //         heuristic = HeuristicsCollection.dummyHeuristic
+        //         break;
 
-        graph.listAdj = {
-            'A': [{ vertex: 'B', weight: 1 }, { vertex: 'C', weight: 3 }],
-            'B': [{ vertex: 'A', weight: 1 }, { vertex: 'C', weight: 3 }, { vertex: 'D', weight: 4 }],
-            'C': [{ vertex: 'A', weight: 3 }, { vertex: 'B', weight: 3 }, { vertex: 'E', weight: 1 }],
-            'D': [{ vertex: 'B', weight: 4 }, { vertex: 'G', weight: 5 }],
-            'E': [{ vertex: 'C', weight: 1 }, { vertex: 'G', weight: 2 }],
-            'G': [{ vertex: 'D', weight: 5 }, { vertex: 'E', weight: 2 }]
-        };
+        //     case 3:
+        //         heuristic = HeuristicsCollection.manhattamHeuristic
+        //     break;
         
-        console.log(
-            "A*, END",
-            Astar(graph,'A','G', (v:string) => 0, true)
+        //     default:
+        //         heuristic = HeuristicsCollection.noHeuristic
+        //     break;
+        // }
+
+        const _aStar = Astar(graph,'0-0','14-29', HeuristicsCollection.manhattamHeuristic)
+        const path = findPathFromAstar(_aStar?.prev ?? {}, '0-0','14-29')
+        const visitedNodes = visitedNodesAstar(_aStar?.X ?? new Set(), _aStar?.fi ?? {})
+
+        await intervalVisitedNodes(
+            Object.entries(visitedNodes)
+            .filter(([key]) => key !== 'Infinity')
+            .map(([, v]) => v.map(v => [Number(v.split('-')[0]),Number(v.split('-')[1])]))
+            .flat()
         )
 
-        console.log("///////////////////////////////////////////////////")
-        console.log(
-            "A*, END",
-            Astar(graph,'A','G', (v:string) => (
-                v === 'D' ? 4 : 0
-            ), true)
-        )
+        intervalColorPath(path.map(p => {
+            const coordList = p.split("-")
+            return coordList.map(Number)
+        }))
 
-        console.log("///////////////////////////////////////////////////")
-        console.log(
-            "A*, END",
-            Astar(graph,'A','G', (v:string) => (
-                v === 'C' ? 100 : 0
-            ), true)
-        )
     }
 
     const executePathFinding = (algorithmToBeExecuted: AlgorithmType) => {
@@ -190,6 +195,11 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     useEffect(() => {
         initializeMaze()
     }, [coloredSquares,visitedSquares])
+
+    const handleHeuristicChange = (e: string) => {
+        console.log(e)
+        setSelectedHeuristicForAstar(+e);
+    };
 
     return (
         <div>
@@ -227,6 +237,14 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                     >
                         A*
                     </Button>
+                    <Select
+                        value={selectedHeuristicForAstar}
+                        onChange={(e) => handleHeuristicChange(e.target.name)}
+                    >
+                        <MenuItem value="1">No Heuristic</MenuItem>
+                        <MenuItem value="2">Dummy Heuristic</MenuItem>
+                        <MenuItem value="3">Manhattan Heuristic</MenuItem>
+                    </Select>
                 </div>
             </div>
         </div>
