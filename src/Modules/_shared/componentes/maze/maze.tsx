@@ -24,7 +24,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     const [coloredSquares, setColoredSquares] = useState<Set<string>>(new Set());
     const [visitedSquares, setVisitedSquares] = useState<Set<string>>(new Set());
     const {length, width} = Graph
-    const [selectedHeuristicForAstar, setSelectedHeuristicForAstar] = useState<number>()
+    const [selectedHeuristicForAstar, setSelectedHeuristicForAstar] = useState<number>(1)
 
     const initializeMaze = () => {
         const sq = [];
@@ -134,22 +134,22 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         const graph = convertGraphToWeightedGraph(ConverterGraphWallNotationToAdjList(Graph))
         setColoredSquares(new Set())
         setVisitedSquares(new Set())
-        // let heuristic = HeuristicsCollection.noHeuristic
-        // switch (selectedHeuristicForAstar) {
-        //     case 2:
-        //         heuristic = HeuristicsCollection.dummyHeuristic
-        //         break;
+        let heuristic = HeuristicsCollection.noHeuristic
+        switch (selectedHeuristicForAstar) {
+            case 2:
+                heuristic = HeuristicsCollection.dummyHeuristic
+                break;
 
-        //     case 3:
-        //         heuristic = HeuristicsCollection.manhattamHeuristic
-        //     break;
+            case 3:
+                heuristic = HeuristicsCollection.manhattamHeuristic
+            break;
         
-        //     default:
-        //         heuristic = HeuristicsCollection.noHeuristic
-        //     break;
-        // }
+            default:
+                heuristic = HeuristicsCollection.noHeuristic
+            break;
+        }
 
-        const _aStar = Astar(graph,'0-0','14-29', HeuristicsCollection.manhattamHeuristic)
+        const _aStar = Astar(graph,'0-0','14-29', heuristic)
         const path = findPathFromAstar(_aStar?.prev ?? {}, '0-0','14-29')
         const visitedNodes = visitedNodesAstar(_aStar?.X ?? new Set(), _aStar?.fi ?? {})
 
@@ -196,9 +196,9 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         initializeMaze()
     }, [coloredSquares,visitedSquares])
 
-    const handleHeuristicChange = (e: string) => {
-        console.log(e)
-        setSelectedHeuristicForAstar(+e);
+    const handleHeuristicChange = (e: number) => {
+        console.log("changeeee",e)
+        setSelectedHeuristicForAstar(e);
     };
 
     return (
@@ -239,7 +239,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                     </Button>
                     <Select
                         value={selectedHeuristicForAstar}
-                        onChange={(e) => handleHeuristicChange(e.target.name)}
+                        onChange={(e) => handleHeuristicChange(+e.target.value)}
                     >
                         <MenuItem value="1">No Heuristic</MenuItem>
                         <MenuItem value="2">Dummy Heuristic</MenuItem>
