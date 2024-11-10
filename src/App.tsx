@@ -1,12 +1,15 @@
 import React from 'react';
 import './App.css';
 import { LandingPage } from './Modules/pages/landing';
+import { DebugContextProvider } from './Context/debug-context';
 
 function App() {
   return (
-    <div className="App">
-      <LandingPage/>
-    </div>
+    <DebugContextProvider>
+      <div className="App">
+        <LandingPage/>
+      </div>
+    </DebugContextProvider>
   );
 }
 

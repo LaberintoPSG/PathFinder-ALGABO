@@ -4,6 +4,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Tooltip } from "@mui/material";
 import StartIcon from '@mui/icons-material/Start';
 import { useState } from "react";
+import { useDebug } from "../../../../Context/debug-context";
 
 interface SquareProps {
     wall?: IWall,
@@ -14,6 +15,8 @@ interface SquareProps {
 }
 
 export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd, extraStyles, coord }) => {
+
+    const { isDebugEnable } = useDebug()
 
     const [hasRightWall,setHasRightWall] = useState<boolean>(wall?.wall_position === 'right')
     const [hasBottomWall,setHasBottomtWall] = useState<boolean>(wall?.wall_position === 'bottom')
@@ -67,11 +70,12 @@ export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd, extraStyle
                         </Tooltip>
                     )
                 }
-                {/* {
+                { isDebugEnable && (
                     <span style={{
                         fontSize: '7px'
                     }}>{coord}</span>
-                } */}
+                )
+                }
             </div>
         </div>
     )

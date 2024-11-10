@@ -1,1 +1,1 @@
-export type AlgorithmType = 'BFS' | 'Dijkstra' | 'DFS' | 'astar' | 'GFS'
+export type AlgorithmType = 'BFS' | 'Dijkstra' | 'DFS' | 'astar' | 'JPS'

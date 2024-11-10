@@ -10,6 +10,7 @@ import { DummyGraphTS } from "../../../../Graphs/DummyGraph";
 import { DFS } from "../../../../Algorithms/DFS";
 import { Astar, findPathFromAstar, visitedNodesAstar, WeightedGraph } from "../../../../Algorithms/Astar";
 import { HeuristicsCollection } from "../../../../Algorithms/Heuristics";
+import { AlgoritmOptions } from "./algorithm-options";
 
 interface MazeProps {
     Graph: {
@@ -135,7 +136,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         setColoredSquares(new Set())
         setVisitedSquares(new Set())
         let heuristic = HeuristicsCollection.noHeuristic
-        switch (selectedHeuristicForAstar) {
+        switch (selectedHeuristicForAstar) { // Vomitivo
             case 2:
                 heuristic = HeuristicsCollection.dummyHeuristic
                 break;
@@ -184,7 +185,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             DFS: () => {
                 executeDFS()
             },
-            GFS: () => {
+            JPS: () => {
                 
             },
         };
@@ -217,34 +218,11 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                     justifyContent: 'space-between',
                     padding: '5%'
                 }}>
-                    <Button variant="contained"
-                    onClick={() => {executePathFinding("Dijkstra")}}
-                    >
-                        Dijkstra
-                    </Button>
-                    <Button variant="contained"
-                    onClick={() => executePathFinding("BFS")}
-                    >
-                        BFS
-                    </Button>
-                    <Button variant="contained"
-                    onClick={() => executePathFinding("DFS")}
-                    >
-                        DFS
-                    </Button>
-                    <Button variant="contained"
-                    onClick={() => executePathFinding("astar")}
-                    >
-                        A*
-                    </Button>
-                    <Select
-                        value={selectedHeuristicForAstar}
-                        onChange={(e) => handleHeuristicChange(+e.target.value)}
-                    >
-                        <MenuItem value="1">No Heuristic</MenuItem>
-                        <MenuItem value="2">Dummy Heuristic</MenuItem>
-                        <MenuItem value="3">Manhattan Heuristic</MenuItem>
-                    </Select>
+                    <AlgoritmOptions
+                    executePathFinding={executePathFinding}
+                    handleHeuristicChange={handleHeuristicChange}
+                    selectedHeuristicForAstar={selectedHeuristicForAstar}
+                    ></AlgoritmOptions>
                 </div>
             </div>
         </div>
