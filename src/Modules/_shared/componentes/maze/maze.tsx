@@ -11,6 +11,7 @@ import { DFS } from "../../../../Algorithms/DFS";
 import { Astar, findPathFromAstar, visitedNodesAstar, WeightedGraph } from "../../../../Algorithms/Astar";
 import { HeuristicsCollection } from "../../../../Algorithms/Heuristics";
 import { AlgoritmOptions } from "./algorithm-options";
+import { MazeLegend } from "./maze-legend";
 
 interface MazeProps {
     Graph: {
@@ -216,7 +217,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                 <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    padding: '5%'
+                    padding: '2%'
                 }}>
                     <AlgoritmOptions
                     executePathFinding={executePathFinding}
@@ -224,6 +225,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                     selectedHeuristicForAstar={selectedHeuristicForAstar}
                     ></AlgoritmOptions>
                 </div>
+                <MazeLegend/>
             </div>
         </div>
 
