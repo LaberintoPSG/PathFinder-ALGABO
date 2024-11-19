@@ -111,9 +111,20 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
             }}>
                 <Button variant="contained"
                 onClick={() => executePathFinding("JPS")}
+                sx={{
+                    marginRight: '0.5rem'
+                }}
                 >
                     JPS
                 </Button>
+                <Select
+                    value={selectedHeuristicForAstar}
+                    onChange={(e) => handleHeuristicChange(+e.target.value)}
+                >
+                        <MenuItem value="1">No Heuristic</MenuItem>
+                        <MenuItem value="2">Dummy Heuristic</MenuItem>
+                        <MenuItem value="3">Manhattan Heuristic</MenuItem>
+                </Select>
                 <Tooltip title="About the algorithm">
                     <HelpIcon sx={helpStyle} onClick={() => onOpenHelpModal("JPS")} />
                 </Tooltip>

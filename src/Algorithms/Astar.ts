@@ -16,18 +16,18 @@ export class WeightedGraph {
     }
 }
 
-type Heuristic = (v: string) => number
+export type Heuristic = (v: string) => number
 
-type PriorityForVertex = {
+export type PriorityForVertex = {
     priority: number,
     vertex: string
 }
 
-const compareVertex: ICompare<PriorityForVertex> = (a:PriorityForVertex, b:PriorityForVertex ) => {
+export const compareVertex: ICompare<PriorityForVertex> = (a:PriorityForVertex, b:PriorityForVertex ) => {
     return a.priority < b.priority ? -1 : 1
 }
 
-const _algorithmLogger = (canLog: boolean, logText: any) => canLog && (console.log(logText))
+export const algorithmLogger = (canLog: boolean, logText: any) => canLog && (console.log(logText))
 
 
 export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: Heuristic, logEnable = false) => {
@@ -47,15 +47,15 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
         vertex: start
     })
 
-    _algorithmLogger(logEnable,"INIT")
+    algorithmLogger(logEnable,"INIT")
 
     while (!Q.isEmpty()) {
 
         const U = Q.dequeue().vertex
-        _algorithmLogger(logEnable, "---------------------------------------")
-        _algorithmLogger(logEnable, "U= "+ U)
+        algorithmLogger(logEnable, "---------------------------------------")
+        algorithmLogger(logEnable, "U= "+ U)
         X.add(U)
-        _algorithmLogger(logEnable,X)
+        algorithmLogger(logEnable,X)
 
         if (U === end) {
             return {X,Q,fi,prev}
@@ -63,7 +63,7 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
 
         for (const _ of G.listAdj[U]) {
             const {vertex: V, weight: W} = _
-            _algorithmLogger(logEnable,{V})
+            algorithmLogger(logEnable,{V})
             const alt = fi[U] + W
             
             if (alt < fi[V]) {
@@ -75,7 +75,7 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
                 })
                 prev[V] = U
                 const arrQ = Q.toArray()
-                _algorithmLogger(logEnable,{arrQ,fi,prev})
+                algorithmLogger(logEnable,{arrQ,fi,prev})
             }
         }
     }

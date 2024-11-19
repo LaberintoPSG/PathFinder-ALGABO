@@ -12,6 +12,7 @@ import { Astar, findPathFromAstar, visitedNodesAstar, WeightedGraph } from "../.
 import { HeuristicsCollection } from "../../../../Algorithms/Heuristics";
 import { AlgoritmOptions } from "./algorithm-options";
 import { MazeLegend } from "./maze-legend";
+import { JPS } from "../../../../Algorithms/JPS";
 
 interface MazeProps {
     Graph: {
@@ -169,6 +170,30 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
 
     }
 
+    const executeJPS = async () => {
+        const graph = convertGraphToWeightedGraph(ConverterGraphWallNotationToAdjList(Graph));
+        setColoredSquares(new Set());
+        setVisitedSquares(new Set());
+      
+        const _jps = JPS(graph, "0-0", "14-29", HeuristicsCollection.noHeuristic);
+        const path = findPathFromAstar(_jps?.prev ?? {}, "0-0", "14-29");
+        const visitedNodes = visitedNodesAstar(_jps?.X ?? new Set(), _jps?.fi ?? {});
+      
+        await intervalVisitedNodes(
+          Object.entries(visitedNodes)
+            .filter(([key]) => key !== "Infinity")
+            .map(([, v]) => v.map((v) => [Number(v.split("-")[0]), Number(v.split("-")[1])]))
+            .flat()
+        );
+      
+        intervalColorPath(
+          path.map((p) => {
+            const coordList = p.split("-");
+            return coordList.map(Number);
+          })
+        );
+      };
+
     const executePathFinding = (algorithmToBeExecuted: AlgorithmType) => {
 
         const algorithms: {
@@ -187,7 +212,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                 executeDFS()
             },
             JPS: () => {
-                
+                executeJPS()
             },
         };
 
