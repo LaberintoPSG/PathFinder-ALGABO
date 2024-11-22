@@ -151,7 +151,10 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             case 3:
                 heuristic = HeuristicsCollection.manhattamHeuristic
             break;
-        
+
+            case 4:
+                heuristic = HeuristicsCollection.perfectHeuristic
+            break;
             default:
                 heuristic = HeuristicsCollection.noHeuristic
             break;
@@ -160,7 +163,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         const _aStar = Astar(graph,'0-0','14-29', heuristic)
         const path = findPathFromAstar(_aStar?.prev ?? {}, '0-0','14-29')
         const visitedNodes = visitedNodesAstar(_aStar?.X ?? new Set(), _aStar?.fi ?? {})
-
+        console.log('pathhhhhh',path)
         await intervalVisitedNodes(
             Object.entries(visitedNodes)
             .filter(([key]) => key !== 'Infinity')
