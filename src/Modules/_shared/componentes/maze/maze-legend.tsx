@@ -1,8 +1,9 @@
 import React from 'react';
 import { Typography } from '@mui/material';
+import { useDebug } from '../../../../Context/debug-context';
 
 interface MazeLegendSquareProps {
-  color: string;
+  color: string
 }
 
 const MazeLegendSquare: React.FC<MazeLegendSquareProps> = ({ color }) => {
@@ -18,7 +19,14 @@ const MazeLegendSquare: React.FC<MazeLegendSquareProps> = ({ color }) => {
   );
 };
 
-export const MazeLegend = () => {
+interface MazeLegendProps {
+  totalNodes: number
+}
+
+export const MazeLegend: React.FC<MazeLegendProps> = ( {totalNodes} ) => {
+
+  const {pathNodeCounter, visitedNodeCounter} = useDebug()
+
   return (
     <div
       style={{
@@ -30,11 +38,11 @@ export const MazeLegend = () => {
     >
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <MazeLegendSquare color="tomato" />
-        <Typography>VISITED NODE</Typography>
+        <Typography>VISITED NODE ({visitedNodeCounter}/{totalNodes})</Typography>
       </div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <MazeLegendSquare color="aqua" />
-        <Typography>PATH NODE</Typography>
+        <Typography>PATH NODE ({pathNodeCounter}/{totalNodes})</Typography>
       </div>
     </div>
   );

@@ -12,6 +12,8 @@ import { Astar, findPathFromAstar, visitedNodesAstar, WeightedGraph } from "../.
 import { HeuristicsCollection } from "../../../../Algorithms/Heuristics";
 import { AlgoritmOptions } from "./algorithm-options";
 import { MazeLegend } from "./maze-legend";
+import { useDebug } from "../../../../Context/debug-context";
+import { useHistory } from "../../../../Context/history-logs-context";
 
 interface MazeProps {
     Graph: {
@@ -27,6 +29,8 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     const [visitedSquares, setVisitedSquares] = useState<Set<string>>(new Set());
     const {length, width} = Graph
     const [selectedHeuristicForAstar, setSelectedHeuristicForAstar] = useState<number>(1)
+    const {pathNodeCounter, setPathNodeCounter, setVisitedNodeCounter, visitedNodeCounter} = useDebug()
+    const { setHistoryAlgorithms, historyAlgorithms } = useHistory()
 
     const initializeMaze = () => {
         const sq = [];
@@ -38,9 +42,11 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                 let style = {}
                 if (isVisited) {
                     style = { backgroundColor: 'tomato' };
+                    setVisitedNodeCounter(visitedNodeCounter + 1);
                 }
                 if (isColored) {
                     style = { backgroundColor: 'aqua' };
+                    setPathNodeCounter(pathNodeCounter + 1);
                 }
                 sq.push(<Square key={`${row}-${col}`} 
                 wall={
@@ -86,7 +92,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         setColoredSquares(new Set())
         setVisitedSquares(new Set())
         const graph = ConverterGraphWallNotationToAdjList(Graph)
-        const _bfs = BFS(graph,'0-0')
+        const _bfs = BFS(graph,'0-0', '14-29')
         const path = findPathFromBFS(_bfs,'0-0','14-29') //TODO:: REFACTOR
         const visitedNodes = visitedNodesBFS(_bfs)
 
@@ -167,10 +173,18 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             return coordList.map(Number)
         }))
 
+        setHistoryAlgorithms([...historyAlgorithms, {
+            algorithmName: 'A*',
+            visitedNodes: 64,
+            pathNodes: 100,
+            totalNodes: 150,
+        }])
+
     }
 
     const executePathFinding = (algorithmToBeExecuted: AlgorithmType) => {
-
+        setVisitedNodeCounter(0);
+        setPathNodeCounter(0);
         const algorithms: {
             [K in AlgorithmType]: () => void;
         } = {
@@ -225,7 +239,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                     selectedHeuristicForAstar={selectedHeuristicForAstar}
                     ></AlgoritmOptions>
                 </div>
-                <MazeLegend/>
+                <MazeLegend totalNodes={length * width}/>
             </div>
         </div>
 

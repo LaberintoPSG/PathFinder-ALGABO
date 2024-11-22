@@ -2,6 +2,7 @@ import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import BugReportIcon from '@mui/icons-material/BugReport';
 import InfoIcon from '@mui/icons-material/Info';
 import DownloadIcon from '@mui/icons-material/Download';
+import CompareIcon from '@mui/icons-material/Compare';
 import { useDebug } from "../../../Context/debug-context";
 
 export const Navbar = () => {

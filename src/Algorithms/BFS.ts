@@ -35,7 +35,7 @@ interface BFSResult {
     d: { [key: string]: number };
 }
 
-export const BFS = (G: Graph, s: string): BFSResult => {
+export const BFS = (G: Graph, s: string, end: string): BFSResult => {
     const colors: { [key: string]: string } = {};
     const d: { [key: string]: number } = {};
     const pi: { [key: string]: string | null } = {};
@@ -57,6 +57,13 @@ export const BFS = (G: Graph, s: string): BFSResult => {
 
     while (!Q.isEmpty()) {
         const u = Q.remove()!;
+
+        if (u === end) {
+            return {
+                pi,
+                d
+            };
+        }
 
         for (const v of G.listAdj[u]) {
             if (colors[v] === "White") {
@@ -114,9 +121,9 @@ const dummyGraph: { [key: string]: string[] } = {
 
 const graph = new Graph();
 graph.listAdj = dummyGraph;
-console.log(BFS(graph, 's'));
+console.log(BFS(graph, 's', 'y'));
 
-const result = BFS(graph, 's'); 
+const result = BFS(graph, 's', 'y'); 
 const lastVertex = graph.getVertex()[graph.getVertex().length - 1];
 const path = findPathFromBFS(result, 's', lastVertex);
 console.log(path);
