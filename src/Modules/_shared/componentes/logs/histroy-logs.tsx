@@ -7,18 +7,42 @@ export const Logs: React.FC = () => {
 
     return(
         <div style={{
-            height: '90%'
+            height: '90%',
+            width: '100%',
+            marginLeft: '2rem'
         }}>
-            <>
+            <h4>
             HISTORY
-            </>
+            </h4>
             {
                 historyAlgorithms.map(e => (
                     <>
-                    <div>
+                    <div style={{
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        marginTop: '1rem',
+                        marginBottom: '1rem'
+                    }}>
                         <span>
-                            {e.algorithmName}
+                            Algorithm: {e.algorithmName}
                         </span>
+                        <span>
+                            Total Nodes: {e.totalNodes}
+                        </span>
+                        <span>
+                            Nodes visited: {e.visitedNodes}
+                        </span>
+                        <span>
+                            Path length: {e.pathNodes}
+                        </span>
+                        {
+                            e.algorithmName === 'A*' && (
+                                <span>
+                                    Heuristic {e.heuristic}
+                                </span>
+                            )
+                        }
                     </div>
                     <Divider></Divider>
                     </>

@@ -107,6 +107,13 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             const coordList = p.split("-")
             return coordList.map(Number)
         }))
+
+        setHistoryAlgorithms([...historyAlgorithms, {
+            algorithmName: 'BFS',
+            visitedNodes: Object.keys(visitedNodes).length,
+            pathNodes: path.length,
+            totalNodes: length * width
+        }])
     }
 
     const executeDijkstra = async () => {
@@ -115,6 +122,13 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         const _dijkstra = Dijkstra(Graph)
         await intervalVisitedNodes(_dijkstra.visitedNodes)
         intervalColorPath(_dijkstra.path)
+
+        setHistoryAlgorithms([...historyAlgorithms, {
+            algorithmName: 'Dijkstra',
+            visitedNodes: _dijkstra.visitedNodes.length,
+            pathNodes: _dijkstra.path.length,
+            totalNodes: length * width
+        }])
     }
 
     const executeDFS = async () => {
@@ -136,6 +150,13 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             const coordList = p.split("-")
             return coordList.map(Number)
         }))
+
+        setHistoryAlgorithms([...historyAlgorithms, {
+            algorithmName: 'DFS',
+            visitedNodes: Object.keys(visitedNodes).length,
+            pathNodes: path.length,
+            totalNodes: length * width
+        }])
     }
 
     const executeAstar = async () => {
@@ -178,9 +199,10 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
 
         setHistoryAlgorithms([...historyAlgorithms, {
             algorithmName: 'A*',
-            visitedNodes: 64,
-            pathNodes: 100,
-            totalNodes: 150,
+            visitedNodes: Object.keys(visitedNodes).length,
+            pathNodes: path.length,
+            totalNodes: length * width,
+            heuristic: heuristic.toString()
         }])
 
     }
