@@ -99,6 +99,7 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
                         <MenuItem value="1">No Heuristic</MenuItem>
                         <MenuItem value="2">Dummy Heuristic</MenuItem>
                         <MenuItem value="3">Manhattan Heuristic</MenuItem>
+                        <MenuItem value="4">Perfect Heuristic</MenuItem>
                 </Select>
                 <Tooltip title="About the algorithm">
                     <HelpIcon sx={helpStyle} onClick={() => onOpenHelpModal("astar")} />
