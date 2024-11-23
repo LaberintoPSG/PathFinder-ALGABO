@@ -54,12 +54,9 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
     while (!Q.isEmpty()) {
 
         const U = Q.dequeue().vertex
-        _algorithmLogger(logEnable, "---------------------------------------")
         logs.push("---------------------------------------")
-        _algorithmLogger(logEnable, "U= "+ U)
         logs.push("U= "+ U)
         X.add(U)
-        _algorithmLogger(logEnable,Array.from(X))
         logs.push("X= "+ Array.from(X))
 
         if (U === end) {
@@ -68,7 +65,6 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
 
         for (const _ of G.listAdj[U]) {
             const {vertex: V, weight: W} = _
-            _algorithmLogger(logEnable,{V})
             logs.push("V= "+ V)
             const alt = fi[U] + W
             
@@ -81,7 +77,6 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
                 })
                 prev[V] = U
                 const arrQ = Q.toArray()
-                _algorithmLogger(logEnable,{arrQ,fi,prev})
                 logs.push(JSON.stringify({arrQ,fi,prev}))
             }
         }

@@ -30,8 +30,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     const {length, width} = Graph
     const [selectedHeuristicForAstar, setSelectedHeuristicForAstar] = useState<number>(1)
     const {pathNodeCounter, setPathNodeCounter, setVisitedNodeCounter, visitedNodeCounter, setStatusLog} = useDebug()
-    const { setHistoryAlgorithms, historyAlgorithms } = useHistory()
-    const [graphToShow, setGraphToShow] = useState({...Graph})
+    const { setHistoryAlgorithms, historyAlgorithms, setSelectedHeuristic, setCurrentExecutingAlgorithm } = useHistory()
 
     const initializeMaze = () => {
         const sq = [];
@@ -81,6 +80,8 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     }
     
     const intervalColorPath = (nodesToColor: number[][]) => {
+        setSelectedHeuristic('')
+        setCurrentExecutingAlgorithm('')
         nodesToColor.forEach((node, index) => {
             setTimeout(() => {
                 const key = `${node[0]}-${node[1]}`;
@@ -115,6 +116,9 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             pathNodes: path.length,
             totalNodes: length * width
         }])
+
+        setStatusLog([])
+        setStatusLog(_bfs?.logs?.map(log => (log+'\n')) ?? [])
     }
 
     const executeDijkstra = async () => {
@@ -164,26 +168,8 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         const graph = convertGraphToWeightedGraph(ConverterGraphWallNotationToAdjList(Graph))
         setColoredSquares(new Set())
         setVisitedSquares(new Set())
-        let heuristic = HeuristicsCollection.noHeuristic
-        switch (selectedHeuristicForAstar) {
-            case 3:
-                heuristic = HeuristicsCollection.manhattamHeuristic
-            break;
+        let heuristic = selectHeuristic()
 
-            case 4:
-                heuristic = HeuristicsCollection.perfectHeuristic
-            break;
-            case 5:
-                const _prunedGraph= PruneMaze(Graph)
-                const _dijkstraPath = Dijkstra(_prunedGraph).path.map(coord => (`${coord[0]}-${coord[1]}`))
-                heuristic = (v:string) => {
-                    return _dijkstraPath.includes(v) ? 0 : 100;
-                }
-            break;
-            default:
-                heuristic = HeuristicsCollection.noHeuristic
-            break;
-        }
 
         const _aStar = Astar(graph,'0-0','14-29', heuristic)
         const path = findPathFromAstar(_aStar?.prev ?? {}, '0-0','14-29')
@@ -208,6 +194,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             heuristic: heuristic.toString()
         }])
 
+        setStatusLog([])
         setStatusLog(_aStar?.logs?.map(log => (log+'\n')) ?? [])
 
     }
@@ -219,15 +206,19 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             [K in AlgorithmType]: () => void;
         } = {
             BFS: () => {
+                setCurrentExecutingAlgorithm('BFS')
                 executeBFS()
             },
             Dijkstra: () => {
+                setCurrentExecutingAlgorithm('Dijkstra')
                 executeDijkstra()
             },
             astar: () => {
+                setCurrentExecutingAlgorithm('A*')
                 executeAstar()
             },
             DFS: () => {
+                setCurrentExecutingAlgorithm('DFS')
                 executeDFS()
             },
             JPS: () => {
@@ -244,7 +235,36 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
 
     const handleHeuristicChange = (e: number) => {
         setSelectedHeuristicForAstar(e);
+        selectHeuristic();
     };
+
+    const selectHeuristic = () => {
+
+        let heuristic = HeuristicsCollection.noHeuristic
+        switch (selectedHeuristicForAstar) {
+            case 3:
+                heuristic = HeuristicsCollection.manhattamHeuristic
+            break;
+
+            case 4:
+                heuristic = HeuristicsCollection.perfectHeuristic
+            break;
+            case 5:
+                const _prunedGraph= PruneMaze(Graph)
+                const _dijkstraPath = Dijkstra(_prunedGraph).path.map(coord => (`${coord[0]}-${coord[1]}`))
+                heuristic = (v:string) => {
+                    return _dijkstraPath.includes(v) ? 0 : 100;
+                }
+            break;
+            default:
+                heuristic = HeuristicsCollection.noHeuristic
+            break;
+        }
+
+        setSelectedHeuristic(heuristic.toString())
+
+        return heuristic
+    }
 
     return (
         <div>

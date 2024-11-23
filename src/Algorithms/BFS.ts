@@ -33,12 +33,14 @@ class Queue {
 interface BFSResult {
     pi: { [key: string]: string | null };
     d: { [key: string]: number };
+    logs?: string[]
 }
 
 export const BFS = (G: Graph, s: string, end: string): BFSResult => {
     const colors: { [key: string]: string } = {};
     const d: { [key: string]: number } = {};
     const pi: { [key: string]: string | null } = {};
+    const logs: string[] = []
 
     const VertexWithoutOrigin = G.getVertex().filter(v => v !== s);
 
@@ -56,21 +58,33 @@ export const BFS = (G: Graph, s: string, end: string): BFSResult => {
     Q.insert(s);
 
     while (!Q.isEmpty()) {
+
+        logs.push("---------------------------------------")
+
         const u = Q.remove()!;
+
+        logs.push("u= "+u)
+
 
         if (u === end) {
             return {
                 pi,
-                d
+                d,
+                logs
             };
         }
 
         for (const v of G.listAdj[u]) {
+            logs.push("v= "+v)
             if (colors[v] === "White") {
                 colors[v] = "Grey";
                 d[v] = d[u] + 1;
                 pi[v] = u;
                 Q.insert(v);
+
+                logs.push("d= "+ JSON.stringify(d))
+                logs.push("pi= "+ JSON.stringify(pi))
+                logs.push("Q= "+ JSON.stringify(Q.Queue))
             }
         }
         colors[u] = "Black";
@@ -78,7 +92,8 @@ export const BFS = (G: Graph, s: string, end: string): BFSResult => {
 
     return {
         pi,
-        d
+        d,
+        logs
     };
 };
 

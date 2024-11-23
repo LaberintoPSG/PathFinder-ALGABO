@@ -3,11 +3,11 @@ import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import { DebugTerminalModal } from "./debug-terminal-modal";
 import { useState } from "react";
 import { useDebug } from "../../../../Context/debug-context";
+import { DebugFragment } from "./debug-fragment";
 
 export const DebugLogs: React.FC = () => {
 
     const [openModal, setOpenModal] = useState(false);
-    const { statusLog } = useDebug()
 
     const handleExpand = () => {
       setOpenModal(true)
@@ -51,13 +51,7 @@ export const DebugLogs: React.FC = () => {
         </Typography>
   
         <Typography variant="body1" sx={{ color: '#00FF00', whiteSpace: 'pre-wrap' }}>
-          {
-            statusLog.map(log => (
-              <>
-                {"\n>"+ log}
-              </>
-            ))
-          }
+          <DebugFragment/>
         </Typography>
   
         <DebugTerminalModal open={openModal} onClose={handleClose} />

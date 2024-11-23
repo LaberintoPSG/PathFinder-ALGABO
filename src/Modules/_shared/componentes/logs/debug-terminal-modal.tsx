@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useDebug } from "../../../../Context/debug-context";
+import { DebugFragment } from "./debug-fragment";
 
 interface DebugTerminalModalProps {
     open: boolean;
@@ -9,8 +10,6 @@ interface DebugTerminalModalProps {
 
 
 export const DebugTerminalModal: React.FC<DebugTerminalModalProps> = ({open,onClose}) => {
-
-  const { statusLog } = useDebug()
 
     return (
         <Dialog open={open} onClose={onClose} fullScreen>
@@ -44,13 +43,7 @@ export const DebugTerminalModal: React.FC<DebugTerminalModalProps> = ({open,onCl
               DEBUG OUTPUT (Full Screen)
             </Typography>
             <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
-              {
-              statusLog.map(log => (
-                <>
-                  {"\n>"+ log}
-                </>
-              ))
-              }
+              <DebugFragment/>
             </Typography>
           </DialogContent>
         </Dialog>

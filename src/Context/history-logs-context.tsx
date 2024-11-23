@@ -2,7 +2,11 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 interface HistoryLogsContextType {
     historyAlgorithms: Array<HistoryAlgorithmLogs>, 
-    setHistoryAlgorithms: (e: Array<HistoryAlgorithmLogs>) => void
+    setHistoryAlgorithms: (e: Array<HistoryAlgorithmLogs>) => void,
+    currentExecutingAlgorithm: string,
+    setCurrentExecutingAlgorithm: (s: string) => void,
+    slectedHeuristic: string,
+    setSelectedHeuristic: (s: string) => void
 }
 
 const HistoryLogsContext = createContext<HistoryLogsContextType | undefined>(undefined);
@@ -31,11 +35,19 @@ export const HistoryLogsContextProvider: React.FC<HistoryProviderProps> = ({ chi
 
     const [historyAlgorithms, setHistoryAlgorithms] = useState<Array<HistoryAlgorithmLogs>>([])
 
+    const [currentExecutingAlgorithm, setCurrentExecutingAlgorithm] = useState<string>('')
+
+    const [slectedHeuristic, setSelectedHeuristic] = useState<string>('')
+
 
     return (
         <HistoryLogsContext.Provider value={{ 
             historyAlgorithms, 
-            setHistoryAlgorithms
+            setHistoryAlgorithms,
+            currentExecutingAlgorithm,
+            setCurrentExecutingAlgorithm,
+            setSelectedHeuristic,
+            slectedHeuristic
             }}>
             {children}
         </HistoryLogsContext.Provider>
