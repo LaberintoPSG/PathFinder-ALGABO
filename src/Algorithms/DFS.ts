@@ -55,21 +55,3 @@ export const findPathFromDFS = (DFSResult: DFSResult, s: string, target: string)
 
     return [];
 };
-
-const dummyGraph: { [key: string]: string[] } = {
-    'r': ['s', 'v'],
-    's': ['r', 'w'],
-    'v': [],
-    'w': ['s', 't', 'x'],
-    't': ['w', 'x'],
-    'x': ['w', 'u', 'y'],
-    'u': ['x', 'y'],
-    'y': ['x', 'u']
-};
-
-const graph = new Graph();
-graph.listAdj = dummyGraph;
-const resultDFS = DFS(graph, 's'); 
-const lastVertexDFS = graph.getVertex()[graph.getVertex().length - 1];
-const pathDFS = findPathFromDFS(resultDFS, 's', lastVertexDFS);
-console.log(pathDFS);

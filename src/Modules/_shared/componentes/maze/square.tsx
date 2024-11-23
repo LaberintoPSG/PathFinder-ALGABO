@@ -54,12 +54,12 @@ export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd, extraStyle
                     boxSizing: 'border-box',
                 }}>
                     {isStart && (
-                        <Tooltip title="Inicio" arrow open={true} placement="top">
+                        <Tooltip title="Start" arrow open={true} placement="top">
                             <StartIcon />
                         </Tooltip>
                     )}
                     {isEnd && (
-                        <Tooltip title="Fin" arrow open={true}>
+                        <Tooltip title="End" arrow open={true}>
                             <LogoutIcon />
                         </Tooltip>
                     )}

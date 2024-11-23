@@ -33,12 +33,14 @@ class Queue {
 interface BFSResult {
     pi: { [key: string]: string | null };
     d: { [key: string]: number };
+    logs?: string[]
 }
 
-export const BFS = (G: Graph, s: string): BFSResult => {
+export const BFS = (G: Graph, s: string, end: string): BFSResult => {
     const colors: { [key: string]: string } = {};
     const d: { [key: string]: number } = {};
     const pi: { [key: string]: string | null } = {};
+    const logs: string[] = []
 
     const VertexWithoutOrigin = G.getVertex().filter(v => v !== s);
 
@@ -56,14 +58,33 @@ export const BFS = (G: Graph, s: string): BFSResult => {
     Q.insert(s);
 
     while (!Q.isEmpty()) {
+
+        logs.push("---------------------------------------")
+
         const u = Q.remove()!;
 
+        logs.push("u= "+u)
+
+
+        if (u === end) {
+            return {
+                pi,
+                d,
+                logs
+            };
+        }
+
         for (const v of G.listAdj[u]) {
+            logs.push("v= "+v)
             if (colors[v] === "White") {
                 colors[v] = "Grey";
                 d[v] = d[u] + 1;
                 pi[v] = u;
                 Q.insert(v);
+
+                logs.push("d= "+ JSON.stringify(d))
+                logs.push("pi= "+ JSON.stringify(pi))
+                logs.push("Q= "+ JSON.stringify(Q.Queue))
             }
         }
         colors[u] = "Black";
@@ -71,7 +92,8 @@ export const BFS = (G: Graph, s: string): BFSResult => {
 
     return {
         pi,
-        d
+        d,
+        logs
     };
 };
 
@@ -100,23 +122,3 @@ export const visitedNodesBFS = (BFSResult: BFSResult) => {
         return acc;
     }, {} as { [key: number]: string[] });
 }
-
-const dummyGraph: { [key: string]: string[] } = {
-    'r': ['s', 'v'],
-    's': ['r', 'w'],
-    'v': [],
-    'w': ['s', 't', 'x'],
-    't': ['w', 'x'],
-    'x': ['w', 'u', 'y'],
-    'u': ['x', 'y'],
-    'y': ['x', 'u']
-};
-
-const graph = new Graph();
-graph.listAdj = dummyGraph;
-console.log(BFS(graph, 's'));
-
-const result = BFS(graph, 's'); 
-const lastVertex = graph.getVertex()[graph.getVertex().length - 1];
-const path = findPathFromBFS(result, 's', lastVertex);
-console.log(path);

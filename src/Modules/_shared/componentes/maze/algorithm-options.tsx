@@ -4,6 +4,7 @@ import HelpIcon from '@mui/icons-material/Help';
 import { useState } from "react";
 import { GenericModal } from "../generic-modal";
 import { AlgorithmInformation } from "../../../../Constants/AlgorithmInformation";
+import { useHistory } from "../../../../Context/history-logs-context";
 
 interface AlgoritmOptionsProps {
     selectedHeuristicForAstar: number,
@@ -22,6 +23,8 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
     const [modalOpen, setModalOpen] = useState(false)
     const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>("")
     const [selectedAlgorithmDescription, setSelectedAlgorithmDescription] = useState<string>("")
+
+    const { currentExecutingAlgorithm } = useHistory()
 
     const onOpenHelpModal = (algorithmName: AlgorithmType) => {
 
@@ -42,7 +45,7 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
                 display: 'flex',
                 alignItems: 'center'
             }}>
-                <Button variant="contained"
+                <Button variant="contained" disabled={currentExecutingAlgorithm ? true : false}
                     onClick={() => {executePathFinding("Dijkstra")}}
                     >
                         Dijkstra
@@ -56,7 +59,7 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
                 display: 'flex',
                 alignItems: 'center'
             }}>
-                <Button variant="contained"
+                <Button variant="contained" disabled={currentExecutingAlgorithm ? true : false}
                 onClick={() => executePathFinding("BFS")}
                 >
                     BFS
@@ -70,7 +73,7 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
                 display: 'flex',
                 alignItems: 'center'
             }}>
-                <Button variant="contained"
+                <Button variant="contained" disabled={currentExecutingAlgorithm ? true : false}
                 onClick={() => executePathFinding("DFS")}
                 >
                     DFS
@@ -84,7 +87,7 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
                 display: 'flex',
                 alignItems: 'center'
             }}>
-                <Button variant="contained"
+                <Button variant="contained" disabled={currentExecutingAlgorithm ? true : false}
                 onClick={() => executePathFinding("astar")}
                 sx={{
                     marginRight: '0.5rem'
@@ -97,9 +100,9 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
                     onChange={(e) => handleHeuristicChange(+e.target.value)}
                 >
                         <MenuItem value="1">No Heuristic</MenuItem>
-                        <MenuItem value="2">Dummy Heuristic</MenuItem>
                         <MenuItem value="3">Manhattan Heuristic</MenuItem>
                         <MenuItem value="4">Perfect Heuristic</MenuItem>
+                        <MenuItem value="5">Prune Heuristic</MenuItem>
                 </Select>
                 <Tooltip title="About the algorithm">
                     <HelpIcon sx={helpStyle} onClick={() => onOpenHelpModal("astar")} />
@@ -110,7 +113,7 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
                 display: 'flex',
                 alignItems: 'center'
             }}>
-                <Button variant="contained"
+                <Button variant="contained" disabled={currentExecutingAlgorithm ? true : false}
                 onClick={() => executePathFinding("JPS")}
                 >
                     JPS
