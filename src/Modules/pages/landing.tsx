@@ -10,51 +10,13 @@ import { generateRandomWalls } from "../_shared/utils";
 
 export const LandingPage = () => {
 
-    const { isDebugEnable } = useDebug()
-
-    const length = 15
-    const width = 30
-
-    const Graph: {
+    const { isDebugEnable, graph, setGraph } = useDebug()
+    setGraph(ExportedGraph as {
         length: number;
         width: number;
         walls: IWall[];
-    } = {
-        length,
-        width,
-        walls: generateRandomWalls(length,width)
-    }
+    })
 
-    Graph.walls = Array.from(new Map(Graph.walls.map(wall => [JSON.stringify(wall.square_coord), wall])).values()); // TODO:: RESUELVE UN BUG, PERO UN SQUARE DEBERIA PODER TENER NINGUN VECINO NI DERECHO NI IZQUIERDO (HAY UN TEMA CON EL RENDERIZADO)
-
-    console.log(Graph)
-
-    // return (
-    //     <div style={{
-    //         height: '100vh'
-    //     }}>
-    //         <Navbar/>
-    //         <div style={{
-    //             display: 'flex',
-    //             justifyContent: 'center',
-    //             alignItems: 'center',
-    //             height: '90vh'
-    //         }}>
-    //             <Logs/>
-    //             <Maze
-    //                 Graph={ExportedGraph as {
-    //                     length: number;
-    //                     width: number;
-    //                     walls: IWall[];
-    //                 }}
-    //                 // Graph={Graph}
-    //             />
-    //             {isDebugEnable && (
-    //                 <DebugLogs/>
-    //             )}
-    //         </div>
-    //     </div>
-    // )
     return (
         <div style={{ height: '100vh' }}>
             <Navbar />

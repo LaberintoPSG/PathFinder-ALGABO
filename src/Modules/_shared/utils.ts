@@ -1,5 +1,6 @@
 import { WeightedGraph } from "../../Algorithms/Astar";
 import { Graph } from "../../Algorithms/BFS";
+import { Dijkstra } from "../../Algorithms/Dijkstra";
 import { IWall } from "../../Interfaces/IWall";
 
 
@@ -164,4 +165,31 @@ export const  convertGraphToWeightedGraph = (graph: Graph): WeightedGraph => {
     }
 
     return weightedGraph;
+}
+
+export const ShortestPathFromAnyNodeToEnd = (graph: {
+    length: number;
+    width: number;
+    walls: IWall[];
+    }, end: string) => {
+ 
+    const vertexCollection = ConverterGraphWallNotationToAdjList(graph).getVertex()
+    const res: {[vertex: string]: number} = {}
+    const coordOneEnd = +end.split('-')[0]
+    const coordTwoEnd = +end.split('-')[1]
+    
+    for (const vertex of vertexCollection) {
+        const coordOneOrigin = +vertex.split('-')[0]
+        const coordTwoOrigin = +vertex.split('-')[1]
+        const _dijkstra = Dijkstra(graph,[coordOneOrigin,coordTwoOrigin],[coordOneEnd, coordTwoEnd])
+
+        res[vertex] = _dijkstra.totalDistance
+    }
+
+    return res
+
+}
+
+export const BoundMaze = () => {
+
 }
