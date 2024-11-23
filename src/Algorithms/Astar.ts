@@ -36,6 +36,8 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
     const fi: {[vertex: string]: number} = {}
     const prev: {[vertex: string]: string | undefined} = {}
 
+    const logs = []
+
     for (const vertex of G.getVertex()) {
         fi[vertex] = Infinity;
         prev[vertex] = undefined;
@@ -53,17 +55,21 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
 
         const U = Q.dequeue().vertex
         _algorithmLogger(logEnable, "---------------------------------------")
+        logs.push("---------------------------------------")
         _algorithmLogger(logEnable, "U= "+ U)
+        logs.push("U= "+ U)
         X.add(U)
-        _algorithmLogger(logEnable,X)
+        _algorithmLogger(logEnable,Array.from(X))
+        logs.push("X= "+ Array.from(X))
 
         if (U === end) {
-            return {X,Q,fi,prev}
+            return {X,Q,fi,prev,logs}
         }
 
         for (const _ of G.listAdj[U]) {
             const {vertex: V, weight: W} = _
             _algorithmLogger(logEnable,{V})
+            logs.push("V= "+ V)
             const alt = fi[U] + W
             
             if (alt < fi[V]) {
@@ -76,6 +82,7 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
                 prev[V] = U
                 const arrQ = Q.toArray()
                 _algorithmLogger(logEnable,{arrQ,fi,prev})
+                logs.push(JSON.stringify({arrQ,fi,prev}))
             }
         }
     }
@@ -113,21 +120,3 @@ export const visitedNodesAstar = (X: Set<string>, fi: { [vertex: string]: number
     
     return result;
 };
-
-
-
-const graph = new WeightedGraph();
-
-graph.listAdj = {
-    'A': [{ vertex: 'B', weight: 1 }, { vertex: 'C', weight: 3 }],
-    'B': [{ vertex: 'A', weight: 1 }, { vertex: 'C', weight: 3 }, { vertex: 'D', weight: 4 }],
-    'C': [{ vertex: 'A', weight: 3 }, { vertex: 'B', weight: 3 }, { vertex: 'E', weight: 1 }],
-    'D': [{ vertex: 'B', weight: 4 }, { vertex: 'G', weight: 5 }],
-    'E': [{ vertex: 'C', weight: 1 }, { vertex: 'G', weight: 2 }],
-    'G': [{ vertex: 'D', weight: 5 }, { vertex: 'E', weight: 2 }]
-};
-
-console.log(
-    "A*, END",
-    Astar(graph,'A','G', (v:string) => 0, true)
-)

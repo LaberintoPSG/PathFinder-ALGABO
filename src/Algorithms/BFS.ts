@@ -107,23 +107,3 @@ export const visitedNodesBFS = (BFSResult: BFSResult) => {
         return acc;
     }, {} as { [key: number]: string[] });
 }
-
-const dummyGraph: { [key: string]: string[] } = {
-    'r': ['s', 'v'],
-    's': ['r', 'w'],
-    'v': [],
-    'w': ['s', 't', 'x'],
-    't': ['w', 'x'],
-    'x': ['w', 'u', 'y'],
-    'u': ['x', 'y'],
-    'y': ['x', 'u']
-};
-
-const graph = new Graph();
-graph.listAdj = dummyGraph;
-console.log(BFS(graph, 's', 'y'));
-
-const result = BFS(graph, 's', 'y'); 
-const lastVertex = graph.getVertex()[graph.getVertex().length - 1];
-const path = findPathFromBFS(result, 's', lastVertex);
-console.log(path);

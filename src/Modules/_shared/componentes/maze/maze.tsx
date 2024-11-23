@@ -2,7 +2,7 @@ import { Button, MenuItem, Select } from "@mui/material";
 import { BFS, findPathFromBFS, visitedNodesBFS } from "../../../../Algorithms/BFS";
 import { Dijkstra } from "../../../../Algorithms/Dijkstra";
 import { IWall } from "../../../../Interfaces/IWall";
-import { ConverterGraphWallNotationToAdjList, convertGraphToWeightedGraph } from "../../utils";
+import { ConverterGraphWallNotationToAdjList, convertGraphToWeightedGraph, PruneMaze } from "../../utils";
 import { Square } from "./square";
 import { ReactNode, useEffect, useState } from "react";
 import { AlgorithmType } from "../../../../Constants/Types";
@@ -29,8 +29,9 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     const [visitedSquares, setVisitedSquares] = useState<Set<string>>(new Set());
     const {length, width} = Graph
     const [selectedHeuristicForAstar, setSelectedHeuristicForAstar] = useState<number>(1)
-    const {pathNodeCounter, setPathNodeCounter, setVisitedNodeCounter, visitedNodeCounter} = useDebug()
+    const {pathNodeCounter, setPathNodeCounter, setVisitedNodeCounter, visitedNodeCounter, setStatusLog} = useDebug()
     const { setHistoryAlgorithms, historyAlgorithms } = useHistory()
+    const [graphToShow, setGraphToShow] = useState({...Graph})
 
     const initializeMaze = () => {
         const sq = [];
@@ -110,7 +111,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
 
         setHistoryAlgorithms([...historyAlgorithms, {
             algorithmName: 'BFS',
-            visitedNodes: Object.keys(visitedNodes).length,
+            visitedNodes: Object.values(_bfs.d).filter(distance => distance !== Number.POSITIVE_INFINITY).length,
             pathNodes: path.length,
             totalNodes: length * width
         }])
@@ -135,9 +136,9 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         setColoredSquares(new Set())
         setVisitedSquares(new Set())
         const graph = ConverterGraphWallNotationToAdjList(Graph)
-        const _bfs = DFS(graph,'0-0')
-        const path = findPathFromBFS(_bfs,'0-0','14-29') //TODO:: REFACTOR
-        const visitedNodes = visitedNodesBFS(_bfs)
+        const _dfs = DFS(graph,'0-0')
+        const path = findPathFromBFS(_dfs,'0-0','14-29') //TODO:: REFACTOR
+        const visitedNodes = visitedNodesBFS(_dfs)
 
         await intervalVisitedNodes(
             Object.entries(visitedNodes)
@@ -153,7 +154,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
 
         setHistoryAlgorithms([...historyAlgorithms, {
             algorithmName: 'DFS',
-            visitedNodes: Object.keys(visitedNodes).length,
+            visitedNodes: Object.values(_dfs.d).filter(distance => distance !== Number.POSITIVE_INFINITY).length,
             pathNodes: path.length,
             totalNodes: length * width
         }])
@@ -164,17 +165,20 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         setColoredSquares(new Set())
         setVisitedSquares(new Set())
         let heuristic = HeuristicsCollection.noHeuristic
-        switch (selectedHeuristicForAstar) { // Vomitivo
-            case 2:
-                heuristic = HeuristicsCollection.dummyHeuristic
-                break;
-
+        switch (selectedHeuristicForAstar) {
             case 3:
                 heuristic = HeuristicsCollection.manhattamHeuristic
             break;
 
             case 4:
                 heuristic = HeuristicsCollection.perfectHeuristic
+            break;
+            case 5:
+                const _prunedGraph= PruneMaze(Graph)
+                const _dijkstraPath = Dijkstra(_prunedGraph).path.map(coord => (`${coord[0]}-${coord[1]}`))
+                heuristic = (v:string) => {
+                    return _dijkstraPath.includes(v) ? 0 : 100;
+                }
             break;
             default:
                 heuristic = HeuristicsCollection.noHeuristic
@@ -184,7 +188,6 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         const _aStar = Astar(graph,'0-0','14-29', heuristic)
         const path = findPathFromAstar(_aStar?.prev ?? {}, '0-0','14-29')
         const visitedNodes = visitedNodesAstar(_aStar?.X ?? new Set(), _aStar?.fi ?? {})
-        console.log('pathhhhhh',path)
         await intervalVisitedNodes(
             Object.entries(visitedNodes)
             .filter(([key]) => key !== 'Infinity')
@@ -199,11 +202,13 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
 
         setHistoryAlgorithms([...historyAlgorithms, {
             algorithmName: 'A*',
-            visitedNodes: Object.keys(visitedNodes).length,
+            visitedNodes: _aStar?.X.size ?? 0,
             pathNodes: path.length,
             totalNodes: length * width,
             heuristic: heuristic.toString()
         }])
+
+        setStatusLog(_aStar?.logs?.map(log => (log+'\n')) ?? [])
 
     }
 
@@ -238,7 +243,6 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     }, [coloredSquares,visitedSquares])
 
     const handleHeuristicChange = (e: number) => {
-        console.log("changeeee",e)
         setSelectedHeuristicForAstar(e);
     };
 

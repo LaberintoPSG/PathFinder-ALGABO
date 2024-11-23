@@ -97,9 +97,9 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
                     onChange={(e) => handleHeuristicChange(+e.target.value)}
                 >
                         <MenuItem value="1">No Heuristic</MenuItem>
-                        <MenuItem value="2">Dummy Heuristic</MenuItem>
                         <MenuItem value="3">Manhattan Heuristic</MenuItem>
                         <MenuItem value="4">Perfect Heuristic</MenuItem>
+                        <MenuItem value="5">Prune Heuristic</MenuItem>
                 </Select>
                 <Tooltip title="About the algorithm">
                     <HelpIcon sx={helpStyle} onClick={() => onOpenHelpModal("astar")} />

@@ -45,8 +45,6 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
     const {length, walls, width} = GraphWall
     const graph = new Graph()
 
-    console.log(walls)
-
     const mappedWalls = walls.map(w => (
         {
             ...w,
@@ -85,7 +83,6 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
         }, []);
 
         wallsForCoord.forEach(wc => {
-        console.log(wc)
         if(wc.wall_positions.length === 2) { // has no neighbour right or bottom
 
         }
@@ -102,9 +99,7 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
 
         }
         else if ((wc.wall_positions[0] === 'right')){ // has a bottom neighbour
-            console.log("rojo",wc.str_coord)
             if(wc.square_coord[0] < length-1) {
-                console.log("rojo2", `${wc.square_coord[0]+1}-${wc.square_coord[1]}`)
                 
                 graph.listAdj[wc.str_coord].push(
                     `${wc.square_coord[0]+1}-${wc.square_coord[1]}`
@@ -119,11 +114,8 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
     }
     // the coordinates that are not in the wall graph has both a right neighbour and a bottom neighbour
     const coordsWithWall = walls.map(w => `${w.square_coord[0]}-${w.square_coord[1]}`)
-    console.log("cords wall", coordsWithWall)
     const twoNeighbourCoords = Object.keys(graph.listAdj).filter(key => !coordsWithWall.includes(key));
-
-    console.log("coords que no aparecen en la wall", twoNeighbourCoords)
-
+    
     twoNeighbourCoords.forEach(coord => {
         const coordNumber = coord.split("-").map(Number)
 
@@ -190,6 +182,31 @@ export const ShortestPathFromAnyNodeToEnd = (graph: {
 
 }
 
-export const BoundMaze = () => {
+export const PruneMaze = (graph: {
+    length: number;
+    width: number;
+    walls: IWall[];
+}) => {
+
+    const { length, walls, width } = graph
+
+    const prunedGraph: {
+        length: number;
+        width: number;
+        walls: IWall[];
+    } = {
+        length,
+        width,
+        walls: []
+    }
+
+    for (const wall of walls) {
+        const probability = Math.random();
+        if(probability > 0.1) {
+            prunedGraph.walls.push(wall)
+        }
+    }
+
+    return prunedGraph
 
 }

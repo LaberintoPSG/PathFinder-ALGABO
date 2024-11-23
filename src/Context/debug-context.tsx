@@ -18,7 +18,9 @@ interface DebugContextType {
         length: number;
         width: number;
         walls: IWall[];
-    }) => void
+    }) => void,
+    statusLog: string[],
+    setStatusLog: (logs: string[]) => void
 }
 
 const DebugContext = createContext<DebugContextType | undefined>(undefined);
@@ -40,6 +42,7 @@ export const DebugContextProvider: React.FC<DebugProviderProps> = ({ children })
     const [isDebugEnable, setDebugEnable] = useState(false);
     const [visitedNodeCounter, setVisitedNodeCounter] = useState<number>(0)
     const [pathNodeCounter, setPathNodeCounter] = useState<number>(0)
+    const [statusLog, setStatusLog] = useState<string[]>([])
 
     const [graph, setGraph] = useState<{
         length: number;
@@ -60,7 +63,9 @@ export const DebugContextProvider: React.FC<DebugProviderProps> = ({ children })
             pathNodeCounter,
             setPathNodeCounter,
             graph,
-            setGraph
+            setGraph,
+            statusLog,
+            setStatusLog
             }}>
             {children}
         </DebugContext.Provider>

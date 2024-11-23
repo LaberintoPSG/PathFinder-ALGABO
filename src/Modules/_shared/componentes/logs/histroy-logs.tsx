@@ -1,54 +1,39 @@
-import { Divider } from "@mui/material"
+import { Box, Card, CardContent, Divider, Grid, Typography } from "@mui/material"
 import { useHistory } from "../../../../Context/history-logs-context"
 
 export const Logs: React.FC = () => {
 
     const { historyAlgorithms } = useHistory()
-
-    return(
-        <div style={{
-            height: '90%',
-            width: '100%',
-            marginLeft: '2rem'
-        }}>
-            <h4>
-            HISTORY
-            </h4>
-            {
-                historyAlgorithms.map(e => (
-                    <>
-                    <div style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        marginTop: '1rem',
-                        marginBottom: '1rem'
-                    }}>
-                        <span>
-                            Algorithm: {e.algorithmName}
-                        </span>
-                        <span>
-                            Total Nodes: {e.totalNodes}
-                        </span>
-                        <span>
-                            Nodes visited: {e.visitedNodes}
-                        </span>
-                        <span>
-                            Path length: {e.pathNodes}
-                        </span>
-                        {
-                            e.algorithmName === 'A*' && (
-                                <span>
-                                    Heuristic {e.heuristic}
-                                </span>
-                            )
-                        }
-                    </div>
-                    <Divider></Divider>
-                    </>
-
-                ))
-            }
-        </div>
-    )
+    
+    return (
+        <Box sx={{ height: '90%', width: '100%', marginLeft: '2rem' }}>
+          <Typography variant="h4" gutterBottom>
+            History
+          </Typography>
+          {historyAlgorithms.map((e, index) => (
+            <Card key={index} sx={{ marginBottom: 2, boxShadow: 3 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Algorithm: {e.algorithmName}
+                </Typography>
+                <Typography variant="body1" color="textSecondary" gutterBottom>
+                  Total Nodes: {e.totalNodes}
+                </Typography>
+                <Typography variant="body1" color="textSecondary" gutterBottom>
+                  Nodes Visited: {e.visitedNodes}
+                </Typography>
+                <Typography variant="body1" color="textSecondary" gutterBottom>
+                  Path Length: {e.pathNodes}
+                </Typography>
+                {e.algorithmName === 'A*' && (
+                  <Typography variant="body1" color="textSecondary" gutterBottom>
+                    Heuristic: {e.heuristic}
+                  </Typography>
+                )}
+              </CardContent>
+              <Divider />
+            </Card>
+          ))}
+        </Box>
+      );
 }
