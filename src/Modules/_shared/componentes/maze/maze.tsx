@@ -7,7 +7,7 @@ import { Square } from "./square";
 import { ReactNode, useEffect, useState } from "react";
 import { AlgorithmType } from "../../../../Constants/Types";
 import { DummyGraphTS } from "../../../../Graphs/DummyGraph";
-import { DFS } from "../../../../Algorithms/DFS";
+import { DFS, findPathFromDFS } from "../../../../Algorithms/DFS";
 import { Astar, findPathFromAstar, visitedNodesAstar, WeightedGraph } from "../../../../Algorithms/Astar";
 import { HeuristicsCollection } from "../../../../Algorithms/Heuristics";
 import { AlgoritmOptions } from "./algorithm-options";
@@ -146,9 +146,10 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         setColoredSquares(new Set())
         setVisitedSquares(new Set())
         const graph = ConverterGraphWallNotationToAdjList(Graph)
-        const _dfs = DFS(graph,'0-0')
-        const path = findPathFromBFS(_dfs,'0-0','14-29') //TODO:: REFACTOR
+        const _dfs = DFS(graph,'0-0','14-29')
+        const path = findPathFromDFS(_dfs,'0-0','14-29')
         const visitedNodes = visitedNodesBFS(_dfs)
+        setcurrentTotalVisitedNodes(Object.values(_dfs.d).filter(distance => distance !== Number.POSITIVE_INFINITY).length)
 
         await intervalVisitedNodes(
             Object.entries(visitedNodes)
@@ -168,6 +169,8 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             pathNodes: path.length,
             totalNodes: length * width
         }])
+
+        setStatusLog(_dfs?.logs?.map(log => (log+'\n')) ?? [])
     }
 
     const executeAstar = async () => {
@@ -285,7 +288,6 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                 display: 'grid', 
                 gridTemplateColumns: `repeat(${width}, 2rem)`,
                 border: '5px solid black',
-                // borderTop: '1px solid black'
                 }}>
                 {squares}
             </div>

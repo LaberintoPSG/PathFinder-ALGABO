@@ -65,15 +65,6 @@ export const BFS = (G: Graph, s: string, end: string): BFSResult => {
 
         logs.push("u= "+u)
 
-
-        // if (u === end) {
-        //     return {
-        //         pi,
-        //         d,
-        //         logs
-        //     };
-        // }
-
         for (const v of G.listAdj[u].reverse()) {
             logs.push("v= "+v)
             if (colors[v] === "White") {
