@@ -16,7 +16,7 @@ interface SquareProps {
 
 export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd, extraStyles, coord }) => {
 
-    const { isDebugEnable } = useDebug()
+    const { isDebugEnable, isDebugTerminalOpen } = useDebug()
 
     const [hasRightWall,setHasRightWall] = useState<boolean>(wall?.wall_position === 'right')
     const [hasBottomWall,setHasBottomtWall] = useState<boolean>(wall?.wall_position === 'bottom')
@@ -53,12 +53,12 @@ export const Square: React.FC<SquareProps> = ({ wall, isStart, isEnd, extraStyle
                     ...extraStyles, //the color of the 
                     boxSizing: 'border-box',
                 }}>
-                    {isStart && (
+                    {isStart && !isDebugTerminalOpen && (
                         <Tooltip title="Start" arrow open={true} placement="top">
                             <StartIcon />
                         </Tooltip>
                     )}
-                    {isEnd && (
+                    {isEnd && !isDebugTerminalOpen && (
                         <Tooltip title="End" arrow open={true}>
                             <LogoutIcon />
                         </Tooltip>

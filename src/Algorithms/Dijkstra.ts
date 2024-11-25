@@ -42,6 +42,7 @@ const getNeighbours = (
     start: [number, number] = [0, 0],
     end: [number, number] = [data.length - 1, data.width - 1]
   ): DijkstraResult => {
+    const logs = []
     const { length, width } = data;
     const distances = Array.from({ length }, () => Array(width).fill(Infinity));
     const previous: ([number, number] | null)[][] = Array.from(
@@ -63,6 +64,7 @@ const getNeighbours = (
     distances[start[0]][start[1]] = 0;
   
     while (unvisited.size > 0) {
+      logs.push("---------------------------------------")
       let currentNode: [number, number] | null = null;
       let minDistance = Infinity;
   
@@ -74,10 +76,10 @@ const getNeighbours = (
           currentNode = [row, col];
         }
       });
-  
+
       // Si no hay nodos alcanzables, salir del bucle
       if (currentNode === null) break;
-  
+      logs.push("Current Node: "+ JSON.stringify(currentNode))
       const [currentX, currentY] = currentNode as [number, number];
   
       // Elimina el nodo actual de los no visitados
@@ -91,13 +93,17 @@ const getNeighbours = (
           path.unshift(current);
           current = previous[current[0]][current[1]];
         }
-        return { visitedNodes, path, totalDistance: distances[end[0]][end[1]] };
+        logs.push("dist= "+JSON.stringify(distances.filter(arr => arr.some(item => item !== null))))
+        logs.push("prev= "+JSON.stringify(previous.filter(arr => arr.some(item => item !== null))))
+        logs.push("PATH = " + JSON.stringify(path))
+        return { visitedNodes, path, totalDistance: distances[end[0]][end[1]], logs: logs };
       }
   
       const neighbors = getNeighbours([currentX, currentY], data);
   
       for (const [neighborX, neighborY] of neighbors) {
         // Verifica que los vecinos sean válidos y no estén en paredes
+        logs.push("neighbour= "+`[${neighborX}-${neighborY}]`)
         if (!unvisited.has(`${neighborX}-${neighborY}`)) continue;
   
         const newDist = distances[currentX][currentY] + 1;
@@ -106,6 +112,9 @@ const getNeighbours = (
           previous[neighborX][neighborY] = [currentX, currentY];
         }
       }
+
+      logs.push("dist= "+JSON.stringify(distances.filter(arr => arr.some(item => item !== null))))
+      logs.push("prev= "+JSON.stringify(previous.filter(arr => arr.some(item => item !== null))))
     }
   
     // Si no encuentra un camino, devolver resultado vacío y distancia total 0

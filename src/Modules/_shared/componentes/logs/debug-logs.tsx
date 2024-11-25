@@ -9,11 +9,15 @@ export const DebugLogs: React.FC = () => {
 
     const [openModal, setOpenModal] = useState(false);
 
+    const { setIsDebugTerminalOpen } = useDebug()
+
     const handleExpand = () => {
+      setIsDebugTerminalOpen(true)
       setOpenModal(true)
     };
   
     const handleClose = () => {
+      setIsDebugTerminalOpen(false)
       setOpenModal(false)
     };
   

@@ -27,8 +27,6 @@ const compareVertex: ICompare<PriorityForVertex> = (a:PriorityForVertex, b:Prior
     return a.priority < b.priority ? -1 : 1
 }
 
-const _algorithmLogger = (canLog: boolean, logText: any) => canLog && (console.log(logText))
-
 
 export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: Heuristic, logEnable = false) => {
     const X = new Set<string>()
@@ -49,8 +47,6 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
         vertex: start
     })
 
-    _algorithmLogger(logEnable,"INIT")
-
     while (!Q.isEmpty()) {
 
         const U = Q.dequeue().vertex
@@ -60,6 +56,7 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
         logs.push("X= "+ Array.from(X))
 
         if (U === end) {
+            logs.push("PATH = "+ findPathFromAstar(prev,start,end))
             return {X,Q,fi,prev,logs}
         }
 
@@ -76,8 +73,8 @@ export const Astar = (G: WeightedGraph, start: string, end: string, heuristic: H
                     vertex: V
                 })
                 prev[V] = U
-                const arrQ = Q.toArray()
-                logs.push(JSON.stringify({arrQ,fi,prev}))
+                const PQ = Q.toArray()
+                logs.push(JSON.stringify({PQ,fi,prev}))
             }
         }
     }

@@ -20,7 +20,9 @@ interface DebugContextType {
         walls: IWall[];
     }) => void,
     statusLog: string[],
-    setStatusLog: (logs: string[]) => void
+    setStatusLog: (logs: string[]) => void,
+    isDebugTerminalOpen: boolean,
+    setIsDebugTerminalOpen: (logs: boolean) => void
 }
 
 const DebugContext = createContext<DebugContextType | undefined>(undefined);
@@ -43,6 +45,7 @@ export const DebugContextProvider: React.FC<DebugProviderProps> = ({ children })
     const [visitedNodeCounter, setVisitedNodeCounter] = useState<number>(0)
     const [pathNodeCounter, setPathNodeCounter] = useState<number>(0)
     const [statusLog, setStatusLog] = useState<string[]>([])
+    const [isDebugTerminalOpen, setIsDebugTerminalOpen] = useState<boolean>(false)
 
     const [graph, setGraph] = useState<{
         length: number;
@@ -65,7 +68,9 @@ export const DebugContextProvider: React.FC<DebugProviderProps> = ({ children })
             graph,
             setGraph,
             statusLog,
-            setStatusLog
+            setStatusLog,
+            isDebugTerminalOpen,
+            setIsDebugTerminalOpen
             }}>
             {children}
         </DebugContext.Provider>

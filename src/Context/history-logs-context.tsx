@@ -7,6 +7,8 @@ interface HistoryLogsContextType {
     setCurrentExecutingAlgorithm: (s: string) => void,
     slectedHeuristic: string,
     setSelectedHeuristic: (s: string) => void
+    currentTotalVisitedNodes: number,
+    setcurrentTotalVisitedNodes: (n: number) => void
 }
 
 const HistoryLogsContext = createContext<HistoryLogsContextType | undefined>(undefined);
@@ -39,6 +41,8 @@ export const HistoryLogsContextProvider: React.FC<HistoryProviderProps> = ({ chi
 
     const [slectedHeuristic, setSelectedHeuristic] = useState<string>('')
 
+    const [currentTotalNodes, setcurrentTotalNodes] = useState<number>(0)
+
 
     return (
         <HistoryLogsContext.Provider value={{ 
@@ -47,7 +51,9 @@ export const HistoryLogsContextProvider: React.FC<HistoryProviderProps> = ({ chi
             currentExecutingAlgorithm,
             setCurrentExecutingAlgorithm,
             setSelectedHeuristic,
-            slectedHeuristic
+            slectedHeuristic,
+            currentTotalVisitedNodes: currentTotalNodes,
+            setcurrentTotalVisitedNodes: setcurrentTotalNodes
             }}>
             {children}
         </HistoryLogsContext.Provider>

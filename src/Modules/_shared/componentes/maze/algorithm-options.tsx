@@ -109,7 +109,7 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
                 </Tooltip>
             </div>
 
-            <div style={{
+            {/* <div style={{
                 display: 'flex',
                 alignItems: 'center'
             }}>
@@ -121,7 +121,7 @@ export const AlgoritmOptions: React.FC<AlgoritmOptionsProps> = ( {selectedHeuris
                 <Tooltip title="About the algorithm">
                     <HelpIcon sx={helpStyle} onClick={() => onOpenHelpModal("JPS")} />
                 </Tooltip>
-            </div>
+            </div> */}
 
             <GenericModal 
             open={modalOpen} 

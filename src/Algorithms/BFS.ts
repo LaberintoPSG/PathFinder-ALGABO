@@ -66,15 +66,15 @@ export const BFS = (G: Graph, s: string, end: string): BFSResult => {
         logs.push("u= "+u)
 
 
-        if (u === end) {
-            return {
-                pi,
-                d,
-                logs
-            };
-        }
+        // if (u === end) {
+        //     return {
+        //         pi,
+        //         d,
+        //         logs
+        //     };
+        // }
 
-        for (const v of G.listAdj[u]) {
+        for (const v of G.listAdj[u].reverse()) {
             logs.push("v= "+v)
             if (colors[v] === "White") {
                 colors[v] = "Grey";
@@ -85,6 +85,14 @@ export const BFS = (G: Graph, s: string, end: string): BFSResult => {
                 logs.push("d= "+ JSON.stringify(d))
                 logs.push("pi= "+ JSON.stringify(pi))
                 logs.push("Q= "+ JSON.stringify(Q.Queue))
+
+                if (v === end) {
+                    return {
+                        pi,
+                        d,
+                        logs
+                    };
+                }
             }
         }
         colors[u] = "Black";

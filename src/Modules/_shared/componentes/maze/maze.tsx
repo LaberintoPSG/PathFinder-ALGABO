@@ -30,7 +30,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     const {length, width} = Graph
     const [selectedHeuristicForAstar, setSelectedHeuristicForAstar] = useState<number>(1)
     const {pathNodeCounter, setPathNodeCounter, setVisitedNodeCounter, visitedNodeCounter, setStatusLog} = useDebug()
-    const { setHistoryAlgorithms, historyAlgorithms, setSelectedHeuristic, setCurrentExecutingAlgorithm } = useHistory()
+    const { setHistoryAlgorithms, historyAlgorithms, setSelectedHeuristic, setCurrentExecutingAlgorithm, currentTotalVisitedNodes, setcurrentTotalVisitedNodes } = useHistory()
 
     const initializeMaze = () => {
         const sq = [];
@@ -42,7 +42,13 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                 let style = {}
                 if (isVisited) {
                     style = { backgroundColor: 'tomato' };
-                    setVisitedNodeCounter(visitedNodeCounter + 1);
+                    // setVisitedNodeCounter(
+                    //     currentTotalVisitedNodes >= visitedNodeCounter + 1 ? currentTotalVisitedNodes :
+                    //     visitedNodeCounter + 1);
+                    setVisitedNodeCounter(
+                        visitedNodeCounter + 1 >= currentTotalVisitedNodes ? currentTotalVisitedNodes : visitedNodeCounter + 1
+                    )
+                    // setVisitedNodeCounter(visitedNodeCounter + 1);
                 }
                 if (isColored) {
                     style = { backgroundColor: 'aqua' };
@@ -95,9 +101,9 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         setVisitedSquares(new Set())
         const graph = ConverterGraphWallNotationToAdjList(Graph)
         const _bfs = BFS(graph,'0-0', '14-29')
-        const path = findPathFromBFS(_bfs,'0-0','14-29') //TODO:: REFACTOR
+        const path = findPathFromBFS(_bfs,'0-0','14-29')
         const visitedNodes = visitedNodesBFS(_bfs)
-
+        setcurrentTotalVisitedNodes(Object.values(_bfs.d).filter(distance => distance !== Number.POSITIVE_INFINITY).length)
         await intervalVisitedNodes(
             Object.entries(visitedNodes)
             .filter(([key]) => key !== 'Infinity')
@@ -117,7 +123,6 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             totalNodes: length * width
         }])
 
-        setStatusLog([])
         setStatusLog(_bfs?.logs?.map(log => (log+'\n')) ?? [])
     }
 
@@ -125,9 +130,10 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         setColoredSquares(new Set())
         setVisitedSquares(new Set())
         const _dijkstra = Dijkstra(Graph)
+        setcurrentTotalVisitedNodes(_dijkstra.visitedNodes.length)   
         await intervalVisitedNodes(_dijkstra.visitedNodes)
         intervalColorPath(_dijkstra.path)
-
+        setStatusLog(_dijkstra?.logs?.map(log => (log+'\n')) ?? [])
         setHistoryAlgorithms([...historyAlgorithms, {
             algorithmName: 'Dijkstra',
             visitedNodes: _dijkstra.visitedNodes.length,
@@ -174,6 +180,9 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
         const _aStar = Astar(graph,'0-0','14-29', heuristic)
         const path = findPathFromAstar(_aStar?.prev ?? {}, '0-0','14-29')
         const visitedNodes = visitedNodesAstar(_aStar?.X ?? new Set(), _aStar?.fi ?? {})
+
+        setcurrentTotalVisitedNodes(_aStar?.X.size ?? 0)
+
         await intervalVisitedNodes(
             Object.entries(visitedNodes)
             .filter(([key]) => key !== 'Infinity')
@@ -202,6 +211,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     const executePathFinding = (algorithmToBeExecuted: AlgorithmType) => {
         setVisitedNodeCounter(0);
         setPathNodeCounter(0);
+        setStatusLog([])
         const algorithms: {
             [K in AlgorithmType]: () => void;
         } = {
@@ -235,13 +245,16 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
 
     const handleHeuristicChange = (e: number) => {
         setSelectedHeuristicForAstar(e);
-        selectHeuristic();
+        selectHeuristic(e);
     };
 
-    const selectHeuristic = () => {
+    const selectHeuristic = (h?: number) => {
 
         let heuristic = HeuristicsCollection.noHeuristic
-        switch (selectedHeuristicForAstar) {
+        let heuristicNum = selectedHeuristicForAstar
+        if(h) {heuristicNum = h}
+
+        switch (heuristicNum) {
             case 3:
                 heuristic = HeuristicsCollection.manhattamHeuristic
             break;

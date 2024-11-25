@@ -59,6 +59,7 @@ export const LandingPage = () => {
                         style={{
                             flex: '1 1 15%', 
                             display: 'flex',
+                            maxWidth: '15%',
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}
