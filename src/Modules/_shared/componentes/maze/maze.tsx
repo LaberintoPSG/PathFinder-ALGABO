@@ -269,6 +269,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             break;
             case 5:
                 heuristic = (v:string) => {
+                    
                     return optimalDistanceToGoalSimplifiedMaze[v];
                 }
             break;

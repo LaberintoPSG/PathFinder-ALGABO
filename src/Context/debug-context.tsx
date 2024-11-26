@@ -25,7 +25,8 @@ interface DebugContextType {
     setStatusLog: (logs: string[]) => void,
     isDebugTerminalOpen: boolean,
     setIsDebugTerminalOpen: (logs: boolean) => void,
-    distancesToGoalSimplifiedMaze: { [key: string]: number }
+    distancesToGoalSimplifiedMaze: { [key: string]: number },
+    isLoadingPage: boolean
 }
 
 const DebugContext = createContext<DebugContextType | undefined>(undefined);
@@ -50,6 +51,7 @@ export const DebugContextProvider: React.FC<DebugProviderProps> = ({ children })
     const [statusLog, setStatusLog] = useState<string[]>([])
     const [isDebugTerminalOpen, setIsDebugTerminalOpen] = useState<boolean>(false)
     const [distancesToGoalSimplifiedMaze, setDistancesToGoalSimplifiedMaze] = useState<{ [key: string]: number }>({})
+    const [isLoadingPage,setIsLoadingPage] = useState<boolean>(true)
 
     const [graph, setGraph] = useState<{
         length: number;
@@ -80,6 +82,7 @@ export const DebugContextProvider: React.FC<DebugProviderProps> = ({ children })
         }
 
         setDistancesToGoalSimplifiedMaze(distancesToGoalSimplifiedMaze)
+        setIsLoadingPage(false)
 
     }, []);
 
@@ -97,7 +100,8 @@ export const DebugContextProvider: React.FC<DebugProviderProps> = ({ children })
             setStatusLog,
             isDebugTerminalOpen,
             setIsDebugTerminalOpen,
-            distancesToGoalSimplifiedMaze
+            distancesToGoalSimplifiedMaze,
+            isLoadingPage
             }}>
             {children}
         </DebugContext.Provider>
