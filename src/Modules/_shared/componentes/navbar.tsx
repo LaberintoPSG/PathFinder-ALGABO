@@ -9,13 +9,35 @@ export const Navbar = () => {
 
     const { isDebugEnable, setDebugEnable } = useDebug()
 
+    const aboutPdf = () => {
+        const pdfUrl = 'assets/PATHFINDER.pdf';
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = 'pathfinder_about.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    const aboutPaper = () => {
+        const pdfUrl = 'assets/paper.pdf';
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = 'paper_pathfinder.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
                 <Toolbar sx={{ justifyContent: "space-between" }}>
                     <Box sx={{ display: "flex", gap: 1 }}>
-                        <Button color="inherit" startIcon={<InfoIcon />}>ABOUT THE PROJECT</Button>
-                        <Button color="inherit" startIcon={<DownloadIcon />}>PAPER</Button>
+                        <Button color="inherit" startIcon={<InfoIcon />} onClick={aboutPdf}>ABOUT THE PROJECT</Button>
+                        <Button color="inherit" startIcon={<DownloadIcon />} onClick={aboutPaper}>PAPER</Button>
                         <Button color={
                             isDebugEnable ? "success" : "inherit"
                         } 
