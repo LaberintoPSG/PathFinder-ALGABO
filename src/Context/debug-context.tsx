@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { IWall } from '../Interfaces/IWall';
 import { ConverterGraphWallNotationToAdjList, ShortestPathFromAnyNodeToEnd } from '../Modules/_shared/utils';
-import prunedGraph from '../Graphs/PRUNEDGRAPH_2511_3.json'
+import prunedGraph from '../Graphs/PRUNEDGRAPH_2511_3 copy.json'
 import { Dijkstra } from '../Algorithms/Dijkstra';
 
 interface DebugContextType {

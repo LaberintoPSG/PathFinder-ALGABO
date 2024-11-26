@@ -7,6 +7,7 @@ import { Logs } from "../_shared/componentes/logs/histroy-logs";
 import { Maze } from "../_shared/componentes/maze/maze"
 import { Navbar } from "../_shared/componentes/navbar"
 import { generateRandomWalls } from "../_shared/utils";
+import prunedGraph from '../../Graphs/PRUNEDGRAPH_2511_3 copy.json'
 
 export const LandingPage = () => {
 
