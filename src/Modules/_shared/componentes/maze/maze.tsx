@@ -235,10 +235,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
             DFS: () => {
                 setCurrentExecutingAlgorithm('DFS')
                 executeDFS()
-            },
-            JPS: () => {
-                
-            },
+            }
         };
 
         algorithms[algorithmToBeExecuted]();

@@ -53,14 +53,12 @@ const getNeighbours = (
     const path: [number, number][] = [];
     const unvisited = new Set<string>();
   
-    // Inicializar los no visitados
     for (let row = 0; row < length; row++) {
       for (let col = 0; col < width; col++) {
-        unvisited.add(`${row}-${col}`); // Usa un string como clave
+        unvisited.add(`${row}-${col}`); 
       }
     }
   
-    // Inicializa la distancia
     distances[start[0]][start[1]] = 0;
   
     while (unvisited.size > 0) {
@@ -68,7 +66,6 @@ const getNeighbours = (
       let currentNode: [number, number] | null = null;
       let minDistance = Infinity;
   
-      // Encontrar el nodo con la menor distancia
       unvisited.forEach((node) => {
         const [row, col] = node.split('-').map(Number);
         if (distances[row][col] < minDistance) {
@@ -77,16 +74,13 @@ const getNeighbours = (
         }
       });
 
-      // Si no hay nodos alcanzables, salir del bucle
       if (currentNode === null) break;
       logs.push("Current Node: "+ JSON.stringify(currentNode))
       const [currentX, currentY] = currentNode as [number, number];
   
-      // Elimina el nodo actual de los no visitados
       unvisited.delete(`${currentX}-${currentY}`);
       visitedNodes.push(currentNode);
   
-      // Verifica si hemos llegado al nodo final
       if (currentX === end[0] && currentY === end[1]) {
         let current: [number, number] | null = end;
         while (current) {
@@ -102,7 +96,6 @@ const getNeighbours = (
       const neighbors = getNeighbours([currentX, currentY], data);
   
       for (const [neighborX, neighborY] of neighbors) {
-        // Verifica que los vecinos sean válidos y no estén en paredes
         logs.push("neighbour= "+`[${neighborX}-${neighborY}]`)
         if (!unvisited.has(`${neighborX}-${neighborY}`)) continue;
   
@@ -117,7 +110,6 @@ const getNeighbours = (
       logs.push("prev= "+JSON.stringify(previous.filter(arr => arr.some(item => item !== null))))
     }
   
-    // Si no encuentra un camino, devolver resultado vacío y distancia total 0
     return { visitedNodes, path: [], totalDistance: 0 };
   };
   

@@ -17,11 +17,6 @@ export const LandingPage = () => {
         walls: IWall[];
     })
 
-    // const pruned = PRUNEDGRAPH_2411 as {
-    //     length: number;
-    //     width: number;
-    //     walls: IWall[];
-    // }
 
     return (
         <div style={{ height: '100vh' }}>

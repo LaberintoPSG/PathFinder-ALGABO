@@ -36,7 +36,7 @@ export const generateRandomWalls = (length: number, width: number) => {
 
 }
 
-export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco pero creo que anda
+export const ConverterGraphWallNotationToAdjList = (GraphWall: { 
     length: number;
     width: number;
     walls: IWall[];
@@ -83,10 +83,10 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
         }, []);
 
         wallsForCoord.forEach(wc => {
-        if(wc.wall_positions.length === 2) { // has no neighbour right or bottom
+        if(wc.wall_positions.length === 2) { 
 
         }
-        else if (wc.wall_positions[0] !== 'right') { // has a right neighbour
+        else if (wc.wall_positions[0] !== 'right') { 
             if(wc.square_coord[1] < width-1) {
 
                 graph.listAdj[wc.str_coord].push(
@@ -94,11 +94,11 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
                 )
                 graph.listAdj[`${wc.square_coord[0]}-${wc.square_coord[1]+1}`].push(
                     wc.str_coord
-                ) // since the edge  has no direction
+                ) 
             }
 
         }
-        else if ((wc.wall_positions[0] === 'right')){ // has a bottom neighbour
+        else if ((wc.wall_positions[0] === 'right')){ 
             if(wc.square_coord[0] < length-1) {
                 
                 graph.listAdj[wc.str_coord].push(
@@ -112,7 +112,6 @@ export const ConverterGraphWallNotationToAdjList = (GraphWall: { // es un asco p
         }
         })
     }
-    // the coordinates that are not in the wall graph has both a right neighbour and a bottom neighbour
     const coordsWithWall = walls.map(w => `${w.square_coord[0]}-${w.square_coord[1]}`)
     const twoNeighbourCoords = Object.keys(graph.listAdj).filter(key => !coordsWithWall.includes(key));
     

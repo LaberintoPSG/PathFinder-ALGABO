@@ -22,8 +22,4 @@ export const AlgorithmInformation: {
         title: "A* Algorithm",
         description: "The A* algorithm is a popular pathfinding and graph traversal algorithm. It finds the shortest path from a start node to a goal node while using heuristics to prioritize which paths to explore. A* is commonly used in games and robotics for navigation and is known for its efficiency in finding optimal paths."
     },
-    JPS: {
-        title: "Jump Point Search (JPS)",
-        description: "Jump Point Search is an optimized pathfinding algorithm for grids that builds upon A* but accelerates the search by 'jumping' over multiple grid nodes when possible. It significantly reduces the number of nodes explored, especially in grid-based pathfinding scenarios, making it faster than A* in certain cases."
-    }
 };
