@@ -1,3 +1,5 @@
+Estudiantes: Esteban Casalás, Rafael Filardi, Sebastán Fripp, Carol Glass
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
