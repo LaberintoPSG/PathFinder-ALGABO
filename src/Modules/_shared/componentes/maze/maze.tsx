@@ -14,6 +14,8 @@ import { AlgoritmOptions } from "./algorithm-options";
 import { MazeLegend } from "./maze-legend";
 import { useDebug } from "../../../../Context/debug-context";
 import { useHistory } from "../../../../Context/history-logs-context";
+import prunedGraph from '../../../../Graphs/PRUNEDGRAPH_2511_3.json'
+
 
 interface MazeProps {
     Graph: {
@@ -29,7 +31,7 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
     const [visitedSquares, setVisitedSquares] = useState<Set<string>>(new Set());
     const {length, width} = Graph
     const [selectedHeuristicForAstar, setSelectedHeuristicForAstar] = useState<number>(1)
-    const {pathNodeCounter, setPathNodeCounter, setVisitedNodeCounter, visitedNodeCounter, setStatusLog} = useDebug()
+    const {pathNodeCounter, setPathNodeCounter, setVisitedNodeCounter, visitedNodeCounter, setStatusLog, distancesToGoalSimplifiedMaze: optimalDistanceToGoalSimplifiedMaze} = useDebug()
     const { setHistoryAlgorithms, historyAlgorithms, setSelectedHeuristic, setCurrentExecutingAlgorithm, currentTotalVisitedNodes, setcurrentTotalVisitedNodes } = useHistory()
 
     const initializeMaze = () => {
@@ -266,10 +268,9 @@ export const Maze: React.FC<MazeProps> = ({ Graph }) => {
                 heuristic = HeuristicsCollection.perfectHeuristic
             break;
             case 5:
-                const _prunedGraph= PruneMaze(Graph)
-                const _dijkstraPath = Dijkstra(_prunedGraph).path.map(coord => (`${coord[0]}-${coord[1]}`))
                 heuristic = (v:string) => {
-                    return _dijkstraPath.includes(v) ? 0 : 100;
+                    
+                    return optimalDistanceToGoalSimplifiedMaze[v];
                 }
             break;
             default:
